@@ -11,6 +11,7 @@ import {
   projectsAsset,
   scenariosAsset,
 } from "../../data/assets";
+import ProjectInspector from "../../components/ProjectInspector";
 
 const Map = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -18,7 +19,6 @@ const Map = () => {
 
   const projects = projectsAsset.read();
   const positions = positionsAsset.read();
-  /* const scenarios = scenariosAsset.read(); */
 
   const [mode, setMode] = useState<DisplayMode>("HISTORY");
   const [selected, setSelected] = useState<number | null>(null);
@@ -111,51 +111,58 @@ const Map = () => {
   }, [time]);
 
   return (
-    <div className=" w-full h-full flex flex-col justify-center items-center p-8 relative">
-      <div className="bg-blue-500 relative aspect-video rounded-md overflow-hidden shadow-lg h-full">
-        <div className="absolute top-0 left-0 w-full h-full">
-          <canvas
-            className="w-full aspect-video"
-            ref={canvasRef}
-            width={MAP_SIZE_X}
-            height={MAP_SIZE_Y}
-          />
-          {/* <MapRenderer {history} {time} activeScenario={scenarioIdx} {mode} /> */}
-        </div>
-        <div className="absolute top-0 left-0 z-10 w-full h-full">
-          <svg
-            viewBox="0 0 1920 1080"
-            className="absolute top-0 left-0 w-full h-full"
-          >
-            <>
-              {projects.map((project, idx) => {
-                return (
-                  <circle
-                    cx={`${project.position.x * 100}%`}
-                    cy={`${project.position.y * 100}%`}
-                    r="8"
-                    fill="black"
-                    onClick={() => {
-                      setSelected(idx);
-                    }}
-                  />
-                );
-              })}
+    <>
+      <div className=" w-full h-full flex flex-col justify-center items-center p-8 relative">
+        <div className="bg-blue-500 relative aspect-video rounded-md overflow-hidden shadow-lg h-full">
+          <div className="absolute top-0 left-0 w-full h-full">
+            <canvas
+              className="w-full aspect-video"
+              ref={canvasRef}
+              width={MAP_SIZE_X}
+              height={MAP_SIZE_Y}
+            />
+            {/* <MapRenderer {history} {time} activeScenario={scenarioIdx} {mode} /> */}
+          </div>
+          <div className="absolute top-0 left-0 z-10 w-full h-full">
+            <svg
+              viewBox="0 0 1920 1080"
+              className="absolute top-0 left-0 w-full h-full"
+            >
+              <>
+                {projects.map((project, idx) => {
+                  return (
+                    <circle
+                      cx={`${project.position.x * 100}%`}
+                      cy={`${project.position.y * 100}%`}
+                      r="8"
+                      fill="black"
+                      onClick={() => {
+                        setSelected(idx);
+                      }}
+                    />
+                  );
+                })}
 
-              {positions.map((position) => {
-                <circle
-                  className="pointer-cursor"
-                  cx={`${position.x * 100}%`}
-                  cy={`${position.y * 100}%`}
-                  r="2"
-                  fill="black"
-                />;
-              })}
-            </>
-          </svg>
+                {positions.map((position) => {
+                  <circle
+                    className="pointer-cursor"
+                    cx={`${position.x * 100}%`}
+                    cy={`${position.y * 100}%`}
+                    r="2"
+                    fill="black"
+                  />;
+                })}
+              </>
+            </svg>
+          </div>
         </div>
       </div>
-    </div>
+      <ProjectInspector
+        projects={projects}
+        selected={selected}
+        onDeselect={() => setSelected(null)}
+      />
+    </>
   );
 };
 export default Map;
