@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { Project } from "../types/data";
+import { useClickAway } from "react-use";
 
 export interface ProjectInspectorProps {
   projects: Project[];
@@ -16,15 +17,11 @@ const ProjectInspector: FC<ProjectInspectorProps> = ({
 
   const [open, setOpen] = useState(false);
 
-  /* const project: Project | undefined =
-    selected !== null ? projects[selected] : undefined; */
+  const ref = useRef<HTMLDivElement>(null);
 
-  /* const tempProjectRef = useRef<Project>(); */
-
-  /* if (selected !== null) {
-    tempProjectRef.current = project;
-    console.log(tempProjectRef.current);
-  } */
+  useClickAway(ref, () => {
+    onDeselect();
+  });
 
   useEffect(() => {
     if (selected !== null) {
@@ -39,6 +36,7 @@ const ProjectInspector: FC<ProjectInspectorProps> = ({
     <div
       className={`fixed top-16 bg-white p-4 flex flex-col space-y-4 rounded-md shadow-md w-72 z-50
 	transition-all left-0 ${open ? "" : "-translate-x-72"}`}
+      ref={ref}
     >
       <div
         className="flex flex-col space-y-4 overflow-hidden"
