@@ -6,11 +6,7 @@ import { DisplayMode, History } from "../../types/data";
 
 import { history } from "../../data/CONSTANTS";
 import { remap } from "../../func/data";
-import {
-  positionsAsset,
-  projectsAsset,
-  scenariosAsset,
-} from "../../data/assets";
+import { positionsAsset, projectsAsset } from "../../data/assets";
 import ProjectInspector from "../../components/ProjectInspector";
 
 const Map = () => {
@@ -23,7 +19,7 @@ const Map = () => {
   const [mode, setMode] = useState<DisplayMode>("HISTORY");
   const [selected, setSelected] = useState<number | null>(null);
 
-  const { time, scenario, blur, future } = useControls(
+  const { time, blur, future } = useControls(
     {
       time: {
         value: 4,
@@ -121,7 +117,6 @@ const Map = () => {
               width={MAP_SIZE_X}
               height={MAP_SIZE_Y}
             />
-            {/* <MapRenderer {history} {time} activeScenario={scenarioIdx} {mode} /> */}
           </div>
           <div className="absolute top-0 left-0 z-10 w-full h-full">
             <svg
@@ -144,13 +139,15 @@ const Map = () => {
                 })}
 
                 {positions.map((position) => {
-                  <circle
-                    className="pointer-cursor"
-                    cx={`${position.x * 100}%`}
-                    cy={`${position.y * 100}%`}
-                    r="2"
-                    fill="black"
-                  />;
+                  return (
+                    <circle
+                      className="pointer-cursor"
+                      cx={`${position.x * 100}%`}
+                      cy={`${position.y * 100}%`}
+                      r="2"
+                      fill="black"
+                    />
+                  );
                 })}
               </>
             </svg>
