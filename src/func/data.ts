@@ -18,3 +18,9 @@ export const validateProjectType = (t: string) => {
     throw "not a valid projecttype";
   }
 };
+
+export function shuffleArray<T>(arr: T[]) {
+  return arr.sort(function () {
+    return Math.random() - 0.5;
+  });
+}

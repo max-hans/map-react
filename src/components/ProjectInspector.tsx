@@ -38,10 +38,7 @@ const ProjectInspector: FC<ProjectInspectorProps> = ({
 	transition-all left-0 ${open ? "" : "-translate-x-72"}`}
       ref={ref}
     >
-      <div
-        className="flex flex-col space-y-4 overflow-hidden"
-        /* style={{ display: open ? "visible" : "hidden" }} */
-      >
+      <div className="flex flex-col space-y-4 overflow-hidden">
         {project && (
           <>
             <h2 className="text-xl">{project.name}</h2>
@@ -56,24 +53,3 @@ const ProjectInspector: FC<ProjectInspectorProps> = ({
 };
 
 export default ProjectInspector;
-
-{
-  /* <script lang="ts">
-	import type { Project } from '$lib/types/data';
-
-	export let projects: Project[];
-	export let selected: number | null;
-	let project: Project | undefined;
-
-	let open = false;
-
-	$: if (selected !== null) {
-		project = projects[selected];
-		open = true;
-	} else {
-		project = undefined;
-		open = false;
-	}
-</script>
- */
-}

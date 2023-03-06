@@ -2,11 +2,15 @@ import { useControls } from "leva";
 import { useEffect, useRef, useState } from "react";
 import { MAP_SIZE_X, MAP_SIZE_Y } from "../../CONSTANTS";
 
-import { DisplayMode, History } from "../../types/data";
+import { DisplayMode, History, Scenario } from "../../types/data";
 
 import { history } from "../../data/CONSTANTS";
 import { remap } from "../../func/data";
-import { positionsAsset, projectsAsset } from "../../data/assets";
+import {
+  positionsAsset,
+  projectsAsset,
+  scenariosAsset,
+} from "../../data/assets";
 import ProjectInspector from "../../components/ProjectInspector";
 
 const Map = () => {
@@ -15,11 +19,17 @@ const Map = () => {
 
   const projects = projectsAsset.read();
   const positions = positionsAsset.read();
+  const scenarios = scenariosAsset.read();
 
   const [mode, setMode] = useState<DisplayMode>("HISTORY");
   const [selected, setSelected] = useState<number | null>(null);
 
-  const { time, blur, future } = useControls(
+  const {
+    time,
+    blur,
+    future,
+    scenario: scenarioIndex,
+  } = useControls(
     {
       time: {
         value: 4,
@@ -34,7 +44,7 @@ const Map = () => {
       scenario: {
         value: 0,
         min: 0,
-        max: 10,
+        max: scenarios.length - 1,
         step: 1,
         onChange: (v) => {
           setMode("FUTURE");
@@ -48,9 +58,17 @@ const Map = () => {
         step: 1,
       },
       future: true,
+      position: {
+        value: { x: 0, y: 0 },
+        step: 0.1,
+        joystick: false,
+        editable: false,
+      },
     },
     {}
   );
+
+  const currentScenario = scenarios[scenarioIndex];
 
   const draw = () => {
     if (!canvasRef.current || !videoRef.current) return;
@@ -64,13 +82,14 @@ const Map = () => {
 
       if (blur) ctx.filter = "blur(10px)";
 
-      ctx.drawImage(videoRef.current, 0, 0, MAP_SIZE_X, MAP_SIZE_Y);
-
       if (future) {
         ctx.globalAlpha = 1;
         ctx.fillStyle = "black";
         ctx.font = "48px serif";
+        /* ctx.drawImage(, 0, 0, MAP_SIZE_X, MAP_SIZE_Y); */
         /* ctx.fillText(`future scenario: ${activeScenario.toFixed(0)}`, 600, 500); */
+      } else {
+        ctx.drawImage(videoRef.current, 0, 0, MAP_SIZE_X, MAP_SIZE_Y);
       }
     }
     requestAnimationFrame(draw);
@@ -87,11 +106,27 @@ const Map = () => {
     });
   };
 
+  const createFutureRefs = (scenarios: Scenario[]) => {
+    return Promise.all(
+      scenarios.map((s) => {
+        return new Promise((res) => {
+          let img = document.createElement("img");
+          img.src = `/videos/futures/${s.data}`;
+          img.addEventListener("onloadd", function () {
+            res(img);
+          });
+        });
+      })
+    );
+  };
+
   useEffect(() => {
-    createHistoryRef(history).then((vid) => {
-      videoRef.current = vid;
-      requestAnimationFrame(draw);
-    });
+    Promise.all([createHistoryRef(history), createFutureRefs(scenarios)]).then(
+      ([vid, imgs]) => {
+        videoRef.current = vid;
+        requestAnimationFrame(draw);
+      }
+    );
   }, []);
 
   useEffect(() => {
@@ -138,17 +173,19 @@ const Map = () => {
                   );
                 })}
 
-                {positions.map((position) => {
-                  return (
-                    <circle
-                      className="pointer-cursor"
-                      cx={`${position.x * 100}%`}
-                      cy={`${position.y * 100}%`}
-                      r="2"
-                      fill="black"
-                    />
-                  );
-                })}
+                {positions
+                  .slice(0, positions.length * currentScenario.projects)
+                  .map((position) => {
+                    return (
+                      <circle
+                        className="pointer-cursor"
+                        cx={`${position.x * 100}%`}
+                        cy={`${position.y * 100}%`}
+                        r="2"
+                        fill="black"
+                      />
+                    );
+                  })}
               </>
             </svg>
           </div>
