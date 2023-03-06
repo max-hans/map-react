@@ -6,93 +6,68 @@ import { DisplayMode, History, Scenario } from "../../types/data";
 
 import { history } from "../../data/CONSTANTS";
 import { remap } from "../../func/data";
-import {
-  positionsAsset,
-  projectsAsset,
-  scenariosAsset,
-} from "../../data/assets";
+
+import futures from "../../../public/videos/futures";
+
 import ProjectInspector from "../../components/ProjectInspector";
+import { projects, positions, scenarios } from "../../data";
+import { useEffectOnce } from "react-use";
+import Controller from "../../components/Contoller";
+import useMainStore from "../../stores/main";
 
 const Map = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
   const videoRef = useRef<HTMLVideoElement>();
+  const imageRefs = useRef<HTMLImageElement[]>();
+  const requestIdRef = useRef<number>();
 
-  const projects = projectsAsset.read();
-  const positions = positionsAsset.read();
-  const scenarios = scenariosAsset.read();
-
-  const [mode, setMode] = useState<DisplayMode>("HISTORY");
   const [selected, setSelected] = useState<number | null>(null);
 
-  const {
-    time,
-    blur,
-    future,
-    scenario: scenarioIndex,
-  } = useControls(
-    {
-      time: {
-        value: 4,
-        min: 1950,
-        max: 2020,
-        step: 1,
-        onChange: (v) => {
-          setMode("HISTORY");
-        },
-        transient: false,
-      },
-      scenario: {
-        value: 0,
-        min: 0,
-        max: scenarios.length - 1,
-        step: 1,
-        onChange: (v) => {
-          setMode("FUTURE");
-        },
-        transient: false,
-      },
-      blur: {
-        value: 0,
-        min: 0,
-        max: 20,
-        step: 1,
-      },
-      future: true,
-      position: {
-        value: { x: 0, y: 0 },
-        step: 0.1,
-        joystick: false,
-        editable: false,
-      },
-    },
-    {}
-  );
+  const [time, scenarioIndex, mode] = useMainStore((state) => [
+    state.time,
+    state.scenario,
+    state.mode,
+  ]);
 
   const currentScenario = scenarios[scenarioIndex];
 
   const draw = () => {
-    if (!canvasRef.current || !videoRef.current) return;
+    const { time, mode, scenario } = useMainStore.getState();
+    const future = mode === "FUTURE";
+    if (!canvasRef.current || !videoRef.current || !imageRefs.current) return;
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
 
-    if (videoRef) {
-      ctx.globalAlpha = 0.1;
-      /* ctx.fillStyle = "white"; */
-      /* ctx.fillRect(0, 0, MAP_SIZE_X, MAP_SIZE_Y); */
+    /* ctx.globalAlpha = 0.1; */
 
-      if (blur) ctx.filter = "blur(10px)";
+    console.log(Date.now(), mode, scenario, time);
 
-      if (future) {
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = "black";
-        ctx.font = "48px serif";
-        /* ctx.drawImage(, 0, 0, MAP_SIZE_X, MAP_SIZE_Y); */
-        /* ctx.fillText(`future scenario: ${activeScenario.toFixed(0)}`, 600, 500); */
-      } else {
-        ctx.drawImage(videoRef.current, 0, 0, MAP_SIZE_X, MAP_SIZE_Y);
-      }
+    if (future) {
+      ctx.drawImage(
+        imageRefs.current[scenarioIndex],
+        0,
+        0,
+        MAP_SIZE_X,
+        MAP_SIZE_Y
+      );
+      console.log("future");
+    } else {
+      videoRef.current.currentTime = remap(
+        time,
+        1950,
+        2020,
+        0,
+        videoRef.current.duration
+      );
+      ctx.drawImage(videoRef.current, 0, 0, MAP_SIZE_X, MAP_SIZE_Y);
     }
-    requestAnimationFrame(draw);
+  };
+
+  const tick = () => {
+    if (!canvasRef.current) return;
+    draw();
+    requestIdRef.current = requestAnimationFrame(tick);
   };
 
   const createHistoryRef = (hist: History): Promise<HTMLVideoElement> => {
@@ -106,40 +81,38 @@ const Map = () => {
     });
   };
 
-  const createFutureRefs = (scenarios: Scenario[]) => {
-    return Promise.all(
-      scenarios.map((s) => {
-        return new Promise((res) => {
-          let img = document.createElement("img");
-          img.src = `/videos/futures/${s.data}`;
-          img.addEventListener("onloadd", function () {
-            res(img);
-          });
-        });
-      })
-    );
+  const attachImage = (f: string): Promise<HTMLImageElement> => {
+    return new Promise((res) => {
+      const img = document.createElement("img");
+      img.src = f;
+      img.onload = () => {
+        res(img);
+      };
+    });
   };
 
-  useEffect(() => {
+  const createFutureRefs = (scenarios: Scenario[]) => {
+    const promises = scenarios.map((s) => {
+      return attachImage(`/videos/futures/${s.data}`);
+    });
+    return Promise.all(promises);
+  };
+
+  useEffectOnce(() => {
     Promise.all([createHistoryRef(history), createFutureRefs(scenarios)]).then(
       ([vid, imgs]) => {
+        console.log(imgs);
+
         videoRef.current = vid;
-        requestAnimationFrame(draw);
+        imageRefs.current = imgs;
+        requestIdRef.current = requestAnimationFrame(tick);
       }
     );
-  }, []);
 
-  useEffect(() => {
-    if (!videoRef.current) return;
-    videoRef.current.currentTime = remap(
-      time,
-      1950,
-      2020,
-      0,
-      videoRef.current.duration
-    );
-    console.log(time);
-  }, [time]);
+    return () => {
+      if (requestIdRef.current) cancelAnimationFrame(requestIdRef.current);
+    };
+  });
 
   return (
     <>
@@ -196,6 +169,7 @@ const Map = () => {
         selected={selected}
         onDeselect={() => setSelected(null)}
       />
+      <Controller />
     </>
   );
 };

@@ -2,23 +2,17 @@ import { createAsset } from "use-asset";
 import { shuffleArray, validateProjectType } from "../func/data";
 import { Project, Scenario, Vec2D } from "../types/data";
 
-export const positionsAsset = createAsset(
-  async (shuffle = false): Promise<Vec2D[]> => {
-    const res = (await (
-      await fetch("/data/random-positions.json")
-    ).json()) as Vec2D[];
+import projectsRaw from "./raw/projects.csv?raw";
+import scenariosRaw from "./raw/scenarios.csv?raw";
+import positionsRaw from "./raw/random-positions.json";
 
-    if (shuffle) {
-      return res.sort(() => Math.random() - 0.5);
-    }
-    return shuffleArray(res);
-  }
-);
+export const positions: Vec2D[] = (() => {
+  const positions = positionsRaw as Vec2D[];
+  return shuffleArray(positions);
+})();
 
-export const projectsAsset = createAsset(async () => {
-  const res = await (await fetch("/data/projects.csv")).text();
-
-  const [_, ...data] = res.split("\n").filter((line) => line.length);
+export const projects: Project[] = (() => {
+  const [_, ...data] = projectsRaw.split("\n").filter((line) => line.length);
   const fields = data
     .map((line) => {
       const frags = line.split(";").map((elem) => elem.trim());
@@ -39,12 +33,10 @@ export const projectsAsset = createAsset(async () => {
     .filter((elem): elem is Project => elem !== undefined);
 
   return fields;
-});
+})();
 
-export const scenariosAsset = createAsset(async (): Promise<Scenario[]> => {
-  const res = await (await fetch("/data/scenarios.csv")).text();
-
-  const [_, ...data] = res.split("\n").filter((line) => line.length);
+export const scenarios: Scenario[] = (() => {
+  const [_, ...data] = scenariosRaw.split("\n").filter((line) => line.length);
   const fields = data
     .map((line) => {
       const frags = line.split(";").map((elem) => elem.trim());
@@ -62,4 +54,4 @@ export const scenariosAsset = createAsset(async (): Promise<Scenario[]> => {
     .filter((elem): elem is Scenario => elem !== undefined);
 
   return fields;
-});
+})();

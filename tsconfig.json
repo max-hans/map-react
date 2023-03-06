@@ -16,6 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "d.ts"],
+  "include": ["src", "d.ts", "public/videos/futures"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
