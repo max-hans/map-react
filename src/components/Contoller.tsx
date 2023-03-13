@@ -1,5 +1,6 @@
 import { scenarios } from "../data";
 import useMainStore from "../stores/main";
+import useUiStore from "../stores/ui";
 import Slider from "./Slider";
 
 const Controller = () => {
@@ -13,6 +14,8 @@ const Controller = () => {
       state.setMode,
     ]
   );
+
+  const uiConfig = useUiStore();
 
   return (
     <div
@@ -48,6 +51,14 @@ const Controller = () => {
           }}
         ></input>
       </div>
+
+      <Slider
+        title="zoom"
+        value={uiConfig.targetZoomFactor}
+        onChange={uiConfig.setTargetZoomFactor}
+        min={1}
+        max={10}
+      />
     </div>
   );
 };

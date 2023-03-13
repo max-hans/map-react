@@ -1,8 +1,7 @@
-import { useControls } from "leva";
-import { useEffect, useRef, useState } from "react";
-import { MAP_SIZE_X, MAP_SIZE_Y } from "../../CONSTANTS";
+import { useSpring, animated, SpringRef } from "@react-spring/web";
 
-import { DisplayMode, History, Scenario } from "../../types/data";
+import { useEffect, useImperativeHandle, useRef, useState } from "react";
+import { MAP_SIZE_X, MAP_SIZE_Y } from "../../CONSTANTS";
 
 import { history } from "../../data/CONSTANTS";
 import { remap } from "../../func/data";
@@ -14,6 +13,8 @@ import { projects, positions, scenarios } from "../../data";
 import { useEffectOnce } from "react-use";
 import Controller from "../../components/Contoller";
 import useMainStore from "../../stores/main";
+import { attachImage, createFutureRefs, createHistoryRef } from "./func";
+import useUiStore from "../../stores/ui";
 
 const Map = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -22,7 +23,24 @@ const Map = () => {
   const imageRefs = useRef<HTMLImageElement[]>();
   const requestIdRef = useRef<number>();
 
+  const zoomRef = useRef<{ z: number }>({ z: 1 });
+
+  const [zoomState, setZoomState] = useState(1);
+
+  const uiConfig = useUiStore();
+
   const [selected, setSelected] = useState<number | null>(null);
+
+  useSpring<{ z: number }>(
+    {
+      from: { z: 0 },
+      z: uiConfig.targetZoomFactor,
+      onChange: (z) => {
+        zoomRef.current = z.value;
+      },
+    },
+    [uiConfig]
+  );
 
   const [time, scenarioIndex, mode] = useMainStore((state) => [
     state.time,
@@ -39,19 +57,13 @@ const Map = () => {
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
 
-    /* ctx.globalAlpha = 0.1; */
+    ctx.scale(zoomRef.current.z, zoomRef.current.z);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    console.log(Date.now(), mode, scenario, time);
+    console.log(zoomRef.current);
 
     if (future) {
-      ctx.drawImage(
-        imageRefs.current[scenarioIndex],
-        0,
-        0,
-        MAP_SIZE_X,
-        MAP_SIZE_Y
-      );
-      console.log("future");
+      ctx.drawImage(imageRefs.current[scenario], 0, 0, MAP_SIZE_X, MAP_SIZE_Y);
     } else {
       videoRef.current.currentTime = remap(
         time,
@@ -70,39 +82,9 @@ const Map = () => {
     requestIdRef.current = requestAnimationFrame(tick);
   };
 
-  const createHistoryRef = (hist: History): Promise<HTMLVideoElement> => {
-    return new Promise((res) => {
-      let video = document.createElement("video");
-      video.src = `/videos/${hist.src}`;
-      video.addEventListener("loadeddata", function () {
-        video.currentTime = 0;
-        res(video);
-      });
-    });
-  };
-
-  const attachImage = (f: string): Promise<HTMLImageElement> => {
-    return new Promise((res) => {
-      const img = document.createElement("img");
-      img.src = f;
-      img.onload = () => {
-        res(img);
-      };
-    });
-  };
-
-  const createFutureRefs = (scenarios: Scenario[]) => {
-    const promises = scenarios.map((s) => {
-      return attachImage(`/videos/futures/${s.data}`);
-    });
-    return Promise.all(promises);
-  };
-
   useEffectOnce(() => {
     Promise.all([createHistoryRef(history), createFutureRefs(scenarios)]).then(
       ([vid, imgs]) => {
-        console.log(imgs);
-
         videoRef.current = vid;
         imageRefs.current = imgs;
         requestIdRef.current = requestAnimationFrame(tick);
