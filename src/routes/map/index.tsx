@@ -36,7 +36,7 @@ const Map = () => {
       from: { z: 0 },
       z: uiConfig.targetZoomFactor,
       onChange: (z) => {
-        zoomRef.current = z.value;
+        zoomRef.current = z.value as { z: number };
       },
     },
     [uiConfig]
