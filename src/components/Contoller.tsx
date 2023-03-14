@@ -1,3 +1,4 @@
+import { MAX_ZOOM, MIN_ZOOM } from "../CONSTANTS";
 import { scenarios } from "../data";
 import useMainStore from "../stores/main";
 import useUiStore from "../stores/ui";
@@ -26,14 +27,14 @@ const Controller = () => {
       <Slider
         title="time"
         value={time}
-        onChange={setTime}
+        onValue={setTime}
         min={1950}
         max={2020}
       />
       <Slider
         title="scenario"
         value={scenario}
-        onChange={setScenario}
+        onValue={setScenario}
         min={0}
         max={scenarios.length - 1}
       />
@@ -55,9 +56,11 @@ const Controller = () => {
       <Slider
         title="zoom"
         value={uiConfig.targetZoomFactor}
-        onChange={uiConfig.setTargetZoomFactor}
-        min={1}
-        max={10}
+        onValue={uiConfig.setTargetZoomFactor}
+        min={MIN_ZOOM}
+        max={MAX_ZOOM}
+        useFloat
+        step={0.1}
       />
     </div>
   );

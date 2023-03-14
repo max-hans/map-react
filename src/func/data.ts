@@ -24,3 +24,6 @@ export function shuffleArray<T>(arr: T[]) {
     return Math.random() - 0.5;
   });
 }
+
+export const constrain = (val: number, min: number, max: number) =>
+  Math.min(max, Math.max(val, min));

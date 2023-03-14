@@ -1,28 +1,36 @@
 import { FC } from "react";
 
-interface SliderProps {
-  onChange: (v: number) => void;
+interface SliderProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  onValue: (v: number) => void;
   value: number;
   title: string;
   min: number;
   max: number;
+  useFloat?: boolean;
 }
 
-const Slider: FC<SliderProps> = ({ onChange, value, title, min, max }) => {
+const Slider: FC<SliderProps> = ({
+  onValue,
+  value,
+  title,
+  useFloat = false,
+  ...rest
+}) => {
+  console.log(rest);
+
   return (
     <div className="w-full">
       <div className="flex flex-row justify-between">
         <h3 className="font-bold">{title}</h3>
-        <p className="italic">{value}</p>
+        <p className="italic">{useFloat ? value : Math.floor(value)}</p>
       </div>
       <input
         className="w-full"
         type="range"
-        min={min}
-        max={max}
-        step="1"
         value={value}
-        onChange={(e) => onChange(parseInt(e.target.value))}
+        onChange={(e) => onValue(parseFloat(e.target.value))}
+        step={0.1}
+        {...rest}
       ></input>
     </div>
   );
