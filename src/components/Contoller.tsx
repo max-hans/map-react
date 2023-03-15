@@ -37,6 +37,7 @@ const Controller = () => {
         onValue={setScenario}
         min={0}
         max={scenarios.length - 1}
+        step={1}
       />
 
       <div className="w-full">

@@ -1,4 +1,4 @@
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
 import { animated } from "@react-spring/three";
 
@@ -7,15 +7,18 @@ import VideoMaterial from "./comps/VideoMaterial";
 import useMainStore from "../../stores/main";
 import { remap } from "../../func/data";
 
-import { useSpring } from "@react-spring/web";
 import useUiStore from "../../stores/ui";
+
+import futures from "./res/futures";
 
 import { CameraControls } from "@react-three/drei";
 import { MAX_ZOOM, MIN_ZOOM } from "../../CONSTANTS";
 import { useEffectOnce } from "react-use";
+import { TextureLoader } from "three";
 
 const Scene = () => {
   const { viewport, camera } = useThree();
+  const scenarios = useLoader(TextureLoader, futures);
 
   const [time, scenarioIndex, mode] = useMainStore((state) => [
     state.time,
@@ -27,11 +30,9 @@ const Scene = () => {
 
   useEffectOnce(() => {
     if (!cameraControlsRef.current) return;
-    /* cameraControlsRef.current.disconnect(); */
 
     cameraControlsRef.current.removeAllEventListeners("controlstart");
   });
-  /* const camRef = useRef<OrthographicCamera>(null); */
 
   const uiConfig = useUiStore();
 
@@ -44,7 +45,6 @@ const Scene = () => {
 
   return (
     <>
-      {/* <OrthographicCamera position={[0, 0, 10]} makeDefault /> */}
       <CameraControls
         camera={camera}
         ref={cameraControlsRef}
@@ -59,18 +59,25 @@ const Scene = () => {
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
         dollyToCursor={false}
-        /* verticalDragToForward={verticalDragToForward}
-        infinityDolly={infinityDolly} */
       />
-      <mesh scale={[viewport.width, viewport.height, 1]}>
-        <planeGeometry />
-        <Suspense fallback={<meshStandardMaterial />}>
-          <VideoMaterial
-            url={`/videos/${history.src}`}
-            position={remap(time, 1950, 2020, 0, 1)}
-          />
-        </Suspense>
-      </mesh>
+      <Suspense
+        fallback={<meshStandardMaterial attach="material" color="red" />}
+      >
+        <mesh scale={[viewport.width, viewport.height, 1]}>
+          <planeGeometry />
+          {mode === "HISTORY" ? (
+            <VideoMaterial
+              url={`/videos/${history.src}`}
+              position={remap(time, 1950, 2020, 0, 1)}
+            />
+          ) : (
+            <meshBasicMaterial
+              attach="material"
+              map={scenarios[scenarioIndex]}
+            />
+          )}
+        </mesh>
+      </Suspense>
     </>
   );
 };

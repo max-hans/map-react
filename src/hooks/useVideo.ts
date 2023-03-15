@@ -5,7 +5,7 @@ const useVideo = (url: string, { play }: Partial<{ play: boolean }> = {}) => {
     const vid = document.createElement("video");
     vid.src = url;
     vid.crossOrigin = "Anonymous";
-    vid.loop = true;
+    /* vid.loop = true; */
     vid.muted = true;
     play && vid.play();
     vid.draggable = false;

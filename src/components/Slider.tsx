@@ -16,8 +16,6 @@ const Slider: FC<SliderProps> = ({
   useFloat = false,
   ...rest
 }) => {
-  console.log(rest);
-
   return (
     <div className="w-full">
       <div className="flex flex-row justify-between">
