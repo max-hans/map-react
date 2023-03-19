@@ -19,6 +19,8 @@ import useUiStore from "../../stores/ui";
 import Scene from "./Scene";
 import useKeyboardControls from "../../hooks/useKeyboardControls";
 
+import deviceFrame from "../../assets/device-frame.svg";
+
 const Map = () => {
   const zoomRef = useRef<{ z: number }>({ z: 1 });
 
@@ -42,14 +44,15 @@ const Map = () => {
 
   return (
     <>
-      <div className=" w-full h-full flex flex-col justify-center items-center p-8 relative">
-        <div className="bg-blue-500 relative aspect-video rounded-md overflow-hidden shadow-lg h-full">
-          <div className="absolute top-0 left-0 w-full h-full">
+      <div className="w-full h-full flex flex-col justify-center items-center p-8 relative">
+        <div className="relative overflow-hidden h-full">
+          <div className="w-full h-full z-0 absolute left-0 right-0 top-0 bottom-0">
             <Canvas resize={{ scroll: false }}>
               <MapControls enableZoom={false} />
               <Scene />
             </Canvas>
           </div>
+          <img src={deviceFrame} className="w-full h-full z-10 relative" />
         </div>
       </div>
       <ProjectInspector

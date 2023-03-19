@@ -16,6 +16,13 @@ import { MAX_ZOOM, MIN_ZOOM } from "../../CONSTANTS";
 import { useEffectOnce } from "react-use";
 import { TextureLoader } from "three";
 
+const calcWfromH = (h: number): number => {
+  const w = h / (1080 / 1920);
+  console.log(w);
+
+  return w;
+};
+
 const Scene = () => {
   const { viewport, camera } = useThree();
   const scenarios = useLoader(TextureLoader, futures);
@@ -30,7 +37,6 @@ const Scene = () => {
 
   useEffectOnce(() => {
     if (!cameraControlsRef.current) return;
-
     cameraControlsRef.current.removeAllEventListeners("controlstart");
   });
 
@@ -63,7 +69,7 @@ const Scene = () => {
       <Suspense
         fallback={<meshStandardMaterial attach="material" color="red" />}
       >
-        <mesh scale={[viewport.width, viewport.height, 1]}>
+        <mesh scale={[calcWfromH(viewport.height), viewport.height, 1]}>
           <planeGeometry />
           {mode === "HISTORY" ? (
             <VideoMaterial
