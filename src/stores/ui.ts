@@ -5,12 +5,16 @@ import { constrain } from "../func/data";
 import { DisplayMode } from "../types/data";
 
 interface UiState {
+  showFrame: boolean;
+  setShowFrame: (v: boolean) => void;
   targetZoomFactor: number;
   setTargetZoomFactor: (v: number) => void;
   incrementTargetZoomFactor: (v: number) => void;
 }
 
 const useUiStore = create<UiState>((set, get) => ({
+  showFrame: false,
+  setShowFrame: (showFrame) => set({ showFrame }),
   targetZoomFactor: 1,
   setTargetZoomFactor: (v) => set({ targetZoomFactor: v }),
   incrementTargetZoomFactor: (v) =>

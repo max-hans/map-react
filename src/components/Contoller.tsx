@@ -4,6 +4,8 @@ import useMainStore from "../stores/main";
 import useUiStore from "../stores/ui";
 import Slider from "./Slider";
 
+type Direction = "up" | "left" | "right" | "down";
+
 const Controller = () => {
   const [time, setTime, scenario, setScenario, mode, setMode] = useMainStore(
     (state) => [
@@ -18,11 +20,13 @@ const Controller = () => {
 
   const uiConfig = useUiStore();
 
+  const handleMove = (d: Direction) => {};
+
   return (
     <div
       className={`fixed top-8 right-8 bg-white p-4 flex flex-col space-y-4 rounded-md shadow-md w-72 z-50`}
     >
-      <h2>Controller</h2>
+      <h2>data</h2>
 
       <Slider
         title="time"
@@ -54,6 +58,7 @@ const Controller = () => {
         ></input>
       </div>
 
+      <h2>navigation</h2>
       <Slider
         title="zoom"
         value={uiConfig.targetZoomFactor}
@@ -63,44 +68,47 @@ const Controller = () => {
         useFloat
         step={0.1}
       />
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          onClick={() => handleMove("up")}
+          className="py-2 text-center w-full col-span-2 border border-gray-300 rounded-md"
+        >
+          up
+        </button>
+        <button
+          onClick={() => handleMove("left")}
+          className="py-2 text-center w-full border border-gray-300 rounded-md"
+        >
+          left
+        </button>
+        <button
+          onClick={() => handleMove("right")}
+          className="py-2 text-center w-full border border-gray-300 rounded-md"
+        >
+          right
+        </button>
+        <button
+          onClick={() => handleMove("down")}
+          className="py-2 text-center w-full col-span-2 border border-gray-300 rounded-md"
+        >
+          down
+        </button>
+      </div>
+      <h2>view</h2>
+      <div className="w-full">
+        <div className="flex flex-row justify-between">
+          <h3 className="font-bold">show frames</h3>
+        </div>
+        <input
+          type="checkbox"
+          checked={uiConfig.showFrame}
+          onChange={(e) => {
+            uiConfig.setShowFrame(e.target.checked);
+          }}
+        ></input>
+      </div>
     </div>
   );
 };
 
 export default Controller;
-
-/* {
-      time: {
-        value: 4,
-        min: 1950,
-        max: 2020,
-        step: 1,
-        onChange: (v) => {
-          setMode("HISTORY");
-        }, 
-        transient: false,
-    },
-    scenarioIndex: {
-      value: 0,
-      min: 0,
-      max: scenarios.length - 1,
-      step: 1,
-      onChange: (v) => {
-        setMode("FUTURE");
-      },
-      transient: false
-    },
-    blur: {
-      value: 0,
-      min: 0,
-      max: 20,
-      step: 1,
-    },
-    future: true,
-    position: {
-      value: { x: 0, y: 0 },
-      step: 0.1,
-      joystick: false,
-      editable: false,
-    },
-  }, */
