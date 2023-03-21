@@ -26,7 +26,7 @@ const MOVE_DELTA = 100;
 const Scene = () => {
   const { viewport, camera } = useThree();
   const scenarios = useLoader(TextureLoader, futures);
-  const uiConfig = useUiStore();
+  const [targetZoomFactor] = useUiStore((state) => [state.targetZoomFactor]);
   const meshRef = useRef<Mesh>(null);
 
   const viewportSizeRef = useRef({ width: -1, height: -1 });
@@ -49,8 +49,8 @@ const Scene = () => {
       const tempPos = { ...pos };
       const { width, height } = viewportSizeRef.current;
 
-      const maxX = (planeSize[0] - width / uiConfig.targetZoomFactor) / 2;
-      const maxY = (planeSize[1] - height / uiConfig.targetZoomFactor) / 2;
+      const maxX = (planeSize[0] - width / targetZoomFactor) / 2;
+      const maxY = (planeSize[1] - height / targetZoomFactor) / 2;
 
       if (dir.x) {
         tempPos.x = tempPos.x + dir.x;
@@ -63,7 +63,6 @@ const Scene = () => {
         y: constrain(tempPos.y, -maxY, maxY),
       };
 
-      console.log(maxX, newPos.x);
       return newPos;
     });
   };
@@ -87,9 +86,9 @@ const Scene = () => {
 
   useEffect(() => {
     if (!cameraControlsRef.current) return;
-    cameraControlsRef.current.zoomTo(uiConfig.targetZoomFactor, true);
+    cameraControlsRef.current.zoomTo(targetZoomFactor, true);
     moveCamera({});
-  }, [uiConfig.targetZoomFactor]);
+  }, [targetZoomFactor]);
 
   useEffect(() => {
     updateCamera(pos);
