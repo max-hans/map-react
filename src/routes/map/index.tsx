@@ -15,28 +15,6 @@ const Map = () => {
 
   const uiConfig = useUiStore();
 
-  /* const handleControlChange = (e: any) => {
-    const maxX = 90;
-    const minX = -90;
-    const maxY = 90;
-    const minY = -90;
-
-    if (!e.target) return;
-    const x = e.target.x;
-    const y = e.target.y;
-
-    if (x < minX || x > maxX) {
-      e?.target.target.setX(x < minX ? minX : maxX);
-      camera.position.setX(cameraLastPosition.current.x);
-    }
-    if (y < minY || y > maxY) {
-      e?.target.target.setY(y < minY ? minY : maxY);
-      camera.position.setY(cameraLastPosition.current.y);
-    }
-    cameraLastPosition.current.x = camera.position.x;
-    cameraLastPosition.current.y = camera.position.y;
-  }; */
-
   const renderScene = useCallback(
     (s: ReactNode) => {
       if (uiConfig.showFrame) {
