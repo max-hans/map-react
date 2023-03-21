@@ -13,7 +13,7 @@ interface UiState {
 }
 
 const useUiStore = create<UiState>((set, get) => ({
-  showFrame: false,
+  showFrame: true,
   setShowFrame: (showFrame) => set({ showFrame }),
   targetZoomFactor: 1,
   setTargetZoomFactor: (v) => set({ targetZoomFactor: v }),
