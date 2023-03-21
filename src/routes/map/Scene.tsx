@@ -15,7 +15,6 @@ import { MAX_ZOOM, MIN_ZOOM } from "../../CONSTANTS";
 import { useEffectOnce, useKeyPressEvent } from "react-use";
 import { MathUtils, Mesh, TextureLoader } from "three";
 import { Vec2D } from "@/types/data";
-import { update } from "@react-spring/web";
 
 const calcWfromH = (h: number): number => {
   const w = h / (1080 / 1920);
