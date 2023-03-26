@@ -14,20 +14,31 @@ const VideoMaterial: FC<VideoMaterialProps> = ({ url, position }) => {
     if (video) {
       video.currentTime = 0;
     }
-  }, [video, position]);
+    setTimeout(() => {
+      video.currentTime = 0;
+    });
+  }, []);
 
   useEffect(() => {
     if (position === undefined) return;
     const pos = Math.min(Math.max(position, 0), 1) || 0.00001;
-    try {
-      const v = constrain(pos * video.duration, 0, video.duration);
-      console.log(v, video.duration);
 
+    const v = constrain(pos * video.duration, 0, video.duration);
+    if (!isNaN(v)) {
       video.currentTime = v - 0.001;
-    } catch (e) {
-      console.log(e);
+      return;
     }
   }, [position, video]);
+
+  useEffect(() => {
+    const onLoadedHandler = () => {
+      video.currentTime = 0;
+    };
+    video.addEventListener("loadeddata", onLoadedHandler);
+    return () => {
+      video.removeEventListener("loadeddata", onLoadedHandler);
+    };
+  }, []);
 
   return video ? (
     <meshStandardMaterial emissive="white" toneMapped={false}>
