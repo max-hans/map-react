@@ -12,21 +12,26 @@ import futures from "./res/futures";
 
 import { CameraControls } from "@react-three/drei";
 import { MAX_ZOOM, MIN_ZOOM } from "../../CONSTANTS";
-import { useEffectOnce, useKeyPressEvent } from "react-use";
+import { useEffectOnce } from "react-use";
 import { MathUtils, Mesh, TextureLoader } from "three";
 import { Vec2D } from "@/types/data";
+import { projects } from "@/data";
 
 const calcWfromH = (h: number): number => {
   const w = h / (1080 / 1920);
   return w;
 };
 
-const MOVE_DELTA = 100;
-
 const Scene = () => {
   const { viewport, camera } = useThree();
   const scenarios = useLoader(TextureLoader, futures);
-  const [targetZoomFactor] = useUiStore((state) => [state.targetZoomFactor]);
+  const [targetZoomFactor, move] = useUiStore((state) => [
+    state.targetZoomFactor,
+    state.move,
+  ]);
+
+  const [onSelect] = useMainStore((state) => [state.onSelect]);
+
   const meshRef = useRef<Mesh>(null);
 
   const viewportSizeRef = useRef({ width: -1, height: -1 });
@@ -44,7 +49,7 @@ const Scene = () => {
     cameraControlsRef.current.moveTo(pos.x, pos.y, 0, true);
   };
 
-  const moveCamera = (dir: Partial<{ x: number; y: number }>) => {
+  const moveCamera = (dir: Partial<Vec2D>) => {
     setPos(() => {
       const tempPos = { ...pos };
       const { width, height } = viewportSizeRef.current;
@@ -73,6 +78,13 @@ const Scene = () => {
     state.mode,
   ]);
 
+  const scaleToMeshSize = (pos: Vec2D): Vec2D => {
+    return {
+      x: pos.x * planeSize[0] - planeSize[0] / 2,
+      y: pos.y * planeSize[1] - planeSize[1] / 2,
+    };
+  };
+
   const cameraControlsRef = useRef<CameraControls>(null);
 
   useEffectOnce(() => {
@@ -94,10 +106,11 @@ const Scene = () => {
     updateCamera(pos);
   }, [pos]);
 
-  useKeyPressEvent("ArrowUp", () => moveCamera({ y: -MOVE_DELTA }));
-  useKeyPressEvent("ArrowDown", () => moveCamera({ y: MOVE_DELTA }));
-  useKeyPressEvent("ArrowRight", () => moveCamera({ x: MOVE_DELTA }));
-  useKeyPressEvent("ArrowLeft", () => moveCamera({ x: -MOVE_DELTA }));
+  useEffect(() => {
+    if (move) {
+      moveCamera(move);
+    }
+  }, [move]);
 
   return (
     <>
@@ -121,7 +134,11 @@ const Scene = () => {
       <Suspense
         fallback={<meshStandardMaterial attach="material" color="red" />}
       >
-        <mesh scale={[planeSize[0], planeSize[1], 1]} ref={meshRef}>
+        <mesh
+          scale={[planeSize[0], planeSize[1], 1]}
+          ref={meshRef}
+          position={[0, 0, 0]}
+        >
           <planeGeometry />
           {mode === "HISTORY" ? (
             <VideoMaterial
@@ -135,14 +152,22 @@ const Scene = () => {
             />
           )}
         </mesh>
+        {projects.map((p, i) => {
+          const pos = scaleToMeshSize(p.position);
+
+          return (
+            <mesh
+              position={[pos.x, pos.y, 0]}
+              key={`$project-${p.name}`}
+              onClick={() => onSelect(i)}
+            >
+              <sphereGeometry args={[100, 16]} />
+              <meshBasicMaterial color="red" attach="white" />
+            </mesh>
+          );
+        })}
       </Suspense>
-      {/* <CrossGrid
-        dX={CROSS_DELTA}
-        dY={CROSS_DELTA}
-        numW={stageSize[0] / CROSS_DELTA}
-        numH={stageSize[1] / CROSS_DELTA}
-        crossScale={0.01}
-      /> */}
+
       <gridHelper
         args={[10000, 100, 0xffffff, 0xffffff]}
         rotation={[MathUtils.DEG2RAD * 90, 0, 0]}

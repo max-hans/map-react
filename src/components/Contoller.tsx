@@ -1,4 +1,5 @@
-import { MAX_ZOOM, MIN_ZOOM } from "../CONSTANTS";
+import { Vec2D } from "@/types/data";
+import { MAX_ZOOM, MIN_ZOOM, MOVE_DELTA } from "../CONSTANTS";
 import { scenarios } from "../data";
 import useMainStore from "../stores/main";
 import useUiStore from "../stores/ui";
@@ -20,7 +21,26 @@ const Controller = () => {
 
   const uiConfig = useUiStore();
 
-  const handleMove = (d: Direction) => {};
+  const handleMove = (d: Direction) => {
+    switch (d) {
+      case "down": {
+        uiConfig.setMove({ y: -MOVE_DELTA });
+        break;
+      }
+      case "up": {
+        uiConfig.setMove({ y: MOVE_DELTA });
+        break;
+      }
+      case "left": {
+        uiConfig.setMove({ x: -MOVE_DELTA });
+        break;
+      }
+      case "right": {
+        uiConfig.setMove({ x: MOVE_DELTA });
+        break;
+      }
+    }
+  };
 
   return (
     <div

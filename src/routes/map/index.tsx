@@ -9,11 +9,18 @@ import useUiStore from "../../stores/ui";
 import Scene from "./Scene";
 
 import deviceFrame from "../../assets/device-frame.svg";
+import { useKeyPressEvent } from "react-use";
+import { MOVE_DELTA } from "@/CONSTANTS";
 
 const Map = () => {
   const [selected, setSelected] = useState<number | null>(null);
 
   const uiConfig = useUiStore();
+
+  useKeyPressEvent("ArrowUp", () => uiConfig.setMove({ y: -MOVE_DELTA }));
+  useKeyPressEvent("ArrowDown", () => uiConfig.setMove({ y: MOVE_DELTA }));
+  useKeyPressEvent("ArrowRight", () => uiConfig.setMove({ x: MOVE_DELTA }));
+  useKeyPressEvent("ArrowLeft", () => uiConfig.setMove({ x: -MOVE_DELTA }));
 
   const renderScene = useCallback(
     (s: ReactNode) => {
@@ -45,9 +52,16 @@ const Map = () => {
     <>
       <div className="w-full h-full flex flex-col justify-center items-center p-8 relative">
         {renderScene(
-          <Canvas resize={{}} orthographic className="w-full">
+          <Canvas
+            flat
+            resize={{}}
+            orthographic
+            className="w-full"
+            camera={{ fov: 75, near: 0.01, far: 200, position: [0, 0, 100] }}
+          >
             <color attach="background" args={["red"]} />
             <Scene />
+            {/* <OrthographicCamera position={[0, 0, 0]} /> */}
           </Canvas>
         )}
       </div>

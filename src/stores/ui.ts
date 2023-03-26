@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { MAX_ZOOM, MIN_ZOOM } from "../CONSTANTS";
 import { constrain } from "../func/data";
-import { DisplayMode } from "../types/data";
+import { DisplayMode, Vec2D } from "../types/data";
 
 interface UiState {
   showFrame: boolean;
@@ -10,6 +10,8 @@ interface UiState {
   targetZoomFactor: number;
   setTargetZoomFactor: (v: number) => void;
   incrementTargetZoomFactor: (v: number) => void;
+  setMove: (m: Partial<Vec2D> | null) => void;
+  move: Partial<Vec2D> | null;
 }
 
 const useUiStore = create<UiState>((set, get) => ({
@@ -25,6 +27,8 @@ const useUiStore = create<UiState>((set, get) => ({
         MAX_ZOOM
       ),
     }),
+  setMove: (move) => set({ move }),
+  move: null,
 }));
 
 export default useUiStore;

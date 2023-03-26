@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { Project } from "../types/data";
 import { useClickAway } from "react-use";
+import useMainStore from "@/stores/main";
 
 export interface ProjectInspectorProps {
   projects: Project[];
@@ -8,20 +9,17 @@ export interface ProjectInspectorProps {
   onDeselect: () => void;
 }
 
-const ProjectInspector: FC<ProjectInspectorProps> = ({
-  projects,
-  selected,
-  onDeselect,
-}) => {
+const ProjectInspector: FC<ProjectInspectorProps> = ({ projects }) => {
   const [project, setProject] = useState<Project>();
 
   const [open, setOpen] = useState(false);
 
-  const ref = useRef<HTMLDivElement>(null);
+  const [selected, onSelect] = useMainStore((state) => [
+    state.selected,
+    state.onSelect,
+  ]);
 
-  useClickAway(ref, () => {
-    onDeselect();
-  });
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (selected !== null) {
@@ -44,7 +42,7 @@ const ProjectInspector: FC<ProjectInspectorProps> = ({
             <h2 className="text-xl">{project.name}</h2>
             <img src={`/projects/${project.imgSrc}`} alt={project.name} />
             <p className="w-full">{project.description}</p>
-            <button onClick={onDeselect}>close</button>
+            <button onClick={() => onSelect(null)}>close</button>
           </>
         )}
       </div>
