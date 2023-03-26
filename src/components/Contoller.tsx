@@ -115,17 +115,13 @@ const Controller = () => {
         </button>
       </div>
       <h2>view</h2>
-      <div className="w-full">
-        <div className="flex flex-row justify-between">
-          <h3 className="font-bold">show frames</h3>
+      <div className="w-full flex flex-row space-x-4">
+        <div className="underline text-blue-600">
+          <a href="/map">/standard</a>
         </div>
-        <input
-          type="checkbox"
-          checked={uiConfig.showFrame}
-          onChange={(e) => {
-            uiConfig.setShowFrame(e.target.checked);
-          }}
-        ></input>
+        <div className="underline text-blue-600">
+          <a href="/dev">/develop</a>
+        </div>
       </div>
     </div>
   );
