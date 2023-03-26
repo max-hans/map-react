@@ -8,7 +8,7 @@ import { Canvas } from "@react-three/fiber";
 import Scene from "./Scene";
 import useUiStore from "@/stores/ui";
 
-const Map = () => {
+const MapDev = () => {
   const uiConfig = useUiStore();
 
   useKeyPressEvent("ArrowUp", () => uiConfig.setMove({ y: -MOVE_DELTA }));
@@ -20,8 +20,8 @@ const Map = () => {
 
   return (
     <Frame>
-      <div className="relative overflow-hidden h-full bg-green-300">
-        <div className="w-full h-full z-0 absolute left-0 right-0 top-0 bottom-0 bg-red-300">
+      <div className="relative overflow-hidden h-full w-full">
+        <div className="w-full h-full z-0 absolute left-0 right-0 top-0 bottom-0">
           <Canvas
             flat
             resize={{}}
@@ -34,9 +34,8 @@ const Map = () => {
             {/* <OrthographicCamera position={[0, 0, 0]} /> */}
           </Canvas>
         </div>
-        <img src={deviceFrame} className="w-full h-full z-10 relative" />
       </div>
     </Frame>
   );
 };
-export default Map;
+export default MapDev;

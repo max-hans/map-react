@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./App";
 import Map from "./routes/map";
 import "./index.css";
+import MapDev from "./routes/map/dev";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: "/map",
     element: <Map />,
+  },
+  {
+    path: "/dev",
+    element: <MapDev />,
   },
 ]);
 
