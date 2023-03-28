@@ -33,11 +33,11 @@ const Frame: FC<FrameProps> = ({ children }) => {
       <div className="w-full h-full flex flex-col justify-center items-center p-8 relative">
         {children}
       </div>
-      <ProjectInspector
+      {/* <ProjectInspector
         projects={projects}
         selected={selected}
         onDeselect={() => setSelected(null)}
-      />
+      /> */}
       <Controller />
     </>
   );

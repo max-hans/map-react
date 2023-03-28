@@ -21,17 +21,15 @@ const MapDev = () => {
   return (
     <Frame>
       <div className="relative overflow-hidden h-full w-full">
-        <div className="w-full h-full z-0 absolute left-0 right-0 top-0 bottom-0">
+        <div className="w-full h-full z-0 absolute left-0 right-0 top-0 bottom-0 bg-blue-300">
           <Canvas
             flat
-            resize={{}}
             orthographic
             className="w-full"
             camera={{ fov: 75, near: 0.01, far: 200, position: [0, 0, 100] }}
           >
-            <color attach="background" args={["red"]} />
+            <color attach="background" args={["white"]} />
             <Scene />
-            {/* <OrthographicCamera position={[0, 0, 0]} /> */}
           </Canvas>
         </div>
       </div>

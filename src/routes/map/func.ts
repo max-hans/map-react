@@ -1,4 +1,4 @@
-import { Scenario, History } from "../../types/data";
+import { Scenario, History, Vec2D } from "../../types/data";
 
 export const attachImage = (f: string): Promise<HTMLImageElement> => {
   return new Promise((res) => {
@@ -26,4 +26,12 @@ export const createHistoryRef = (hist: History): Promise<HTMLVideoElement> => {
       res(video);
     });
   });
+};
+
+export const addVec = (a: Vec2D, b: Vec2D) => {
+  return { x: a.x + b.x, y: b.x + a.x };
+};
+
+export const subVec = (a: Vec2D, b: Vec2D) => {
+  return { x: a.x - b.x, y: a.y - b.y };
 };

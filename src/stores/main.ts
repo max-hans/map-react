@@ -1,3 +1,4 @@
+import { projects } from "@/data";
 import { create } from "zustand";
 import { DisplayMode } from "../types/data";
 
@@ -21,8 +22,6 @@ const useMainStore = create<MainState>((set, get) => ({
   setMode: (v) => set({ mode: v }),
   selected: null,
   onSelect: (s) => {
-    console.log(s, get().selected);
-
     if (s !== get().selected) {
       return set({ selected: s });
     }

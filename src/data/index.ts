@@ -1,5 +1,5 @@
 import { createAsset } from "use-asset";
-import { shuffleArray, validateProjectType } from "../func/data";
+import { remap, shuffleArray, validateProjectType } from "../func/data";
 import { Project, Scenario, Vec2D } from "../types/data";
 
 import projectsRaw from "./raw/projects.csv?raw";
@@ -13,13 +13,17 @@ export const positions: Vec2D[] = (() => {
 
 export const projects: Project[] = (() => {
   const [_, ...data] = projectsRaw.split("\n").filter((line) => line.length);
+
   const fields = data
     .map((line) => {
       const frags = line.split(";").map((elem) => elem.trim());
       try {
         const project: Project = {
           name: frags[0],
-          position: { x: parseFloat(frags[4]), y: parseFloat(frags[5]) },
+          position: {
+            x: remap(parseFloat(frags[5]), -180, 180, 0, 1),
+            y: remap(parseFloat(frags[4]), 90, -90, 0, 1),
+          },
           type: validateProjectType(frags[2]),
           time: parseInt(frags[3]),
           description: frags[1],
@@ -31,7 +35,7 @@ export const projects: Project[] = (() => {
       }
     })
     .filter((elem): elem is Project => elem !== undefined);
-
+  console.log(fields);
   return fields;
 })();
 

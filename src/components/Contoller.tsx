@@ -1,4 +1,5 @@
 import { Vec2D } from "@/types/data";
+import { useState } from "react";
 import { MAX_ZOOM, MIN_ZOOM, MOVE_DELTA } from "../CONSTANTS";
 import { scenarios } from "../data";
 import useMainStore from "../stores/main";
@@ -18,6 +19,8 @@ const Controller = () => {
       state.setMode,
     ]
   );
+
+  const [collapse, setCollapse] = useState(false);
 
   const uiConfig = useUiStore();
 
@@ -42,12 +45,21 @@ const Controller = () => {
     }
   };
 
+  const handleScrub = (d: number) => {
+    setTime(time + d);
+  };
+
   return (
     <div
-      className={`fixed top-8 right-8 bg-white p-4 flex flex-col space-y-4 rounded-md shadow-md w-72 z-50`}
+      className={`fixed top-8 right-8 bg-white p-4 flex flex-col space-y-4 rounded-md shadow-md w-72 z-50 transition-all ${
+        collapse ? "translate-x-full" : ""
+      }`}
+      style={{ transform: `${collapse ? "translate(100%,0)" : ""}` }}
     >
+      <button onClick={() => setCollapse((state) => !state)} className="w-min">
+        hide
+      </button>
       <h2>data</h2>
-
       <Slider
         title="time"
         value={time}
@@ -55,6 +67,20 @@ const Controller = () => {
         min={1950}
         max={2020}
       />
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          onClick={() => handleScrub(-1)}
+          className="py-2 text-center w-full border border-gray-300 rounded-md"
+        >
+          {"<<"}
+        </button>
+        <button
+          onClick={() => handleScrub(1)}
+          className="py-2 text-center w-full border border-gray-300 rounded-md"
+        >
+          {">>"}
+        </button>
+      </div>
       <Slider
         title="scenario"
         value={scenario}
@@ -63,7 +89,6 @@ const Controller = () => {
         max={scenarios.length - 1}
         step={1}
       />
-
       <div className="w-full">
         <div className="flex flex-row justify-between">
           <h3 className="font-bold">mode</h3>
@@ -77,7 +102,6 @@ const Controller = () => {
           }}
         ></input>
       </div>
-
       <h2>navigation</h2>
       <Slider
         title="zoom"

@@ -41,7 +41,7 @@ const VideoMaterial: FC<VideoMaterialProps> = ({ url, position }) => {
   }, []);
 
   return video ? (
-    <meshStandardMaterial emissive="white" toneMapped={false}>
+    <meshStandardMaterial emissive="white" toneMapped={false} opacity={0.5}>
       <videoTexture attach="emissiveMap" args={[video]} />
       <videoTexture attach="map" args={[video]} />
     </meshStandardMaterial>

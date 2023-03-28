@@ -25,7 +25,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <main className="app w-screen h-screen bg-gray-800 overflow-hidden">
+    <main className="app w-screen h-screen bg-white overflow-hidden">
       <RouterProvider router={router} />
     </main>
   </React.StrictMode>
