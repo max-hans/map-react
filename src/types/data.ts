@@ -4,10 +4,6 @@ export interface Scenario {
   projects: number;
 }
 
-export interface DisplayScenario extends Scenario {
-  opacity: number;
-}
-
 export interface History {
   src: string;
 }
@@ -38,7 +34,7 @@ export interface History {
   to: number;
 }
 
-export interface TimeDef {
+interface TimeDef {
   month: number;
   year: number;
 }
