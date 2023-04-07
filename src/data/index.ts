@@ -1,15 +1,8 @@
-import { createAsset } from "use-asset";
-import { remap, shuffleArray, validateProjectType } from "../func/data";
-import { Project, Scenario, Vec2D } from "../types/data";
+import { remap, validateProjectType } from "../func/data";
+import { Project, Scenario } from "../types/data";
 
 import projectsRaw from "./raw/projects.csv?raw";
 import scenariosRaw from "./raw/scenarios.csv?raw";
-import positionsRaw from "./raw/random-positions.json";
-
-export const positions: Vec2D[] = (() => {
-  const positions = positionsRaw as Vec2D[];
-  return shuffleArray(positions);
-})();
 
 export const projects: Project[] = (() => {
   const [_, ...data] = projectsRaw.split("\n").filter((line) => line.length);

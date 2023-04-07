@@ -1,9 +1,8 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { Project } from "../types/data";
-import { useClickAway } from "react-use";
 import useMainStore from "@/stores/main";
 
-export interface ProjectInspectorProps {
+interface ProjectInspectorProps {
   projects: Project[];
   selected: number | null;
   onDeselect: () => void;

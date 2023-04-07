@@ -9,4 +9,20 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  build: {
+    minify: "terser",
+    target: "esnext",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          drei: ["@react-three/drei"],
+        },
+      },
+    },
+    terserOptions: {
+      output: {
+        comments: false, // This will remove all comments from the output files
+      },
+    },
+  },
 });
