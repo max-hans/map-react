@@ -225,8 +225,10 @@ const Scene = () => {
         <Borders height={planeSize[1]} width={planeSize[0]} />
       </Suspense>
       <gridHelper
+        position={[0, 0, 10]}
         args={[10000, 100, 0xffffff, 0xffffff]}
         rotation={[MathUtils.DEG2RAD * 90, 0, 0]}
+        renderOrder={1000}
       />
       <EffectComposer>
         <Vignette eskil={false} offset={0.1} darkness={0.5} />

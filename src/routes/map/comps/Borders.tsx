@@ -1,10 +1,10 @@
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
-import { useMemo, FC, useRef } from "react";
+import { useMemo, FC } from "react";
 import { extend, useLoader, useThree } from "@react-three/fiber";
 import { Shape, Vector2 } from "three";
 import { Center } from "@react-three/drei";
 
-import { MeshLineGeometry, MeshLineMaterial, raycast } from "meshline";
+import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 extend({ MeshLineGeometry, MeshLineMaterial });
 
 interface ShapeViewProps {
@@ -25,31 +25,14 @@ const D3ShapeView: FC<ShapeViewProps> = ({ shape }) => {
   /* https://github.com/pmndrs/meshline */
 
   return (
-    <group>
-      {/* <mesh>
-        <meshBasicMaterial color={"red"} opacity={0.2} transparent={true} />
-        <extrudeGeometry
-          args={[
-            shape,
-            {
-              bevelEnabled: false,
-            },
-          ]}
-        />
-      </mesh> */}
-
-      <mesh>
-        <meshLineGeometry
-          points={geo}
-          widthCallback={(p) => p * Math.random()}
-        />
-        <meshLineMaterial
-          lineWidth={0.005}
-          color="blue"
-          resolution={new Vector2(viewport.width, viewport.height)}
-        />
-      </mesh>
-    </group>
+    <mesh renderOrder={999}>
+      <meshLineGeometry points={geo} widthCallback={(p) => p * Math.random()} />
+      <meshLineMaterial
+        lineWidth={0.005}
+        color="blue"
+        resolution={new Vector2(viewport.width, viewport.height)}
+      />
+    </mesh>
   );
 };
 
