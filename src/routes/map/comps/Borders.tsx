@@ -1,43 +1,52 @@
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
-import { useMemo, FC, useState } from "react";
-import { useLoader } from "@react-three/fiber";
-import { ExtrudeGeometry, Shape } from "three";
+import { useMemo, FC, useRef } from "react";
+import { extend, useLoader } from "@react-three/fiber";
+import { Shape } from "three";
 import { Center } from "@react-three/drei";
+
+import { MeshLineGeometry, MeshLineMaterial, raycast } from "meshline";
+extend({ MeshLineGeometry, MeshLineMaterial });
 
 interface ShapeViewProps {
   shape: Shape;
 }
-const ShapeView: FC<ShapeViewProps> = ({ shape }) => {
-  return (
-    <lineLoop position={[0, 0, 5]}>
-      <lineBasicMaterial
-        color={"black"}
-        opacity={1}
-        linewidth={20}
-        fog={false}
-        linejoin="round"
-      />
-      <shapeGeometry args={[shape]} />
-    </lineLoop>
-  );
-};
 
 const D3ShapeView: FC<ShapeViewProps> = ({ shape }) => {
+  const geo = useMemo(() => {
+    const points = shape
+      .extractPoints(1)
+      .shape.map((elem) => [elem.x, elem.y, 0])
+      .flat();
+
+    return points;
+  }, [shape]);
+
+  /* https://github.com/pmndrs/meshline */
+
   return (
-    <mesh>
-      <meshBasicMaterial color={"black"} opacity={0.4} /* transparent */ />
-      <extrudeGeometry
-        args={[
-          shape,
-          {
-            depth: 20,
-            bevelEnabled: false,
-            bevelSize: 5,
-            bevelOffset: 5,
-          },
-        ]}
-      />
-    </mesh>
+    <group>
+      <mesh>
+        <meshBasicMaterial
+          color={"lightgray"}
+          opacity={0.1}
+          transparent={true}
+          depthWrite={true}
+        />
+        <extrudeGeometry
+          args={[
+            shape,
+            {
+              bevelEnabled: false,
+            },
+          ]}
+        />
+      </mesh>
+
+      <mesh raycast={raycast} /* renderOrder={1000} */ position={[0, 0, -1]}>
+        <meshLineGeometry points={geo} />
+        <meshLineMaterial lineWidth={0.002} color="black" />
+      </mesh>
+    </group>
   );
 };
 
@@ -49,7 +58,7 @@ const Borders: FC<BordersProps> = ({
   height: targetHeight,
   width: targetWidth,
 }) => {
-  const data = useLoader(SVGLoader, "/borders.svg");
+  const data = useLoader(SVGLoader, "/borders_3_repair.svg");
 
   const shapes = useMemo(
     () =>
@@ -68,12 +77,11 @@ const Borders: FC<BordersProps> = ({
         container.scale.setX(targetWidth / (width + 14.4));
         container.scale.setY(targetHeight / (height + 28.8) /* 14.4 */);
       }}
-      /* position={[0, -20, 0]} */
       scale={[1, 0.8, 1]}
     >
       <group rotation={[Math.PI, 0, 0]}>
         {shapes.map((item) => (
-          <ShapeView {...item} key={item.index} />
+          <D3ShapeView {...item} key={item.index} />
         ))}
       </group>
     </Center>

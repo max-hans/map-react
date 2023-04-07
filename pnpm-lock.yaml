@@ -14,6 +14,7 @@ specifiers:
   '@vitejs/plugin-react': ^3.1.0
   autoprefixer: ^10.4.13
   leva: ^0.9.34
+  meshline: ^3.1.6
   nanoid: ^4.0.1
   postcss: ^8.4.21
   postprocessing: ^6.30.1
@@ -39,6 +40,7 @@ dependencies:
   '@react-three/postprocessing': 2.7.1_lfvpzd3m5escehi2gx2mx2fjgy
   '@types/three': 0.149.0
   leva: 0.9.34_biqbaboplfbrettd7655fr4n2y
+  meshline: 3.1.6_three@0.150.1
   nanoid: 4.0.1
   postprocessing: 6.30.1_three@0.150.1
   react: 18.2.0
