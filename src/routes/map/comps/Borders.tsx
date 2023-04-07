@@ -62,11 +62,14 @@ const Borders: FC<BordersProps> = ({
 
   const shapes = useMemo(
     () =>
-      data.paths.flatMap((g, index) =>
-        g
-          .toShapes(true)
-          .map((shape: Shape) => ({ shape: shape, color: g.color, index }))
-      ),
+      data.paths
+        .flat()
+        .filter((g) => !(g.userData!.node.id === "FRAME"))
+        .flatMap((g, index) => {
+          return g
+            .toShapes(true)
+            .map((shape: Shape) => ({ shape: shape, color: g.color, index }));
+        }),
     [data]
   );
 
