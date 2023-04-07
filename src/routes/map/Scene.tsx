@@ -5,7 +5,6 @@ import { history } from "../../data/CONSTANTS";
 import VideoMaterial from "./comps/VideoMaterial";
 import useMainStore from "../../stores/main";
 import { constrain, remap } from "../../func/data";
-import { BlendFunction } from "postprocessing";
 
 import useUiStore from "../../stores/ui";
 
@@ -22,17 +21,7 @@ import { projects } from "@/data";
 import positions from "../../data/raw/random-positions.json";
 import Borders from "./comps/Borders";
 
-import {
-  EffectComposer,
-  DepthOfField,
-  Bloom,
-  Noise,
-  DotScreen,
-  Scanline,
-  Pixelation,
-  Vignette,
-} from "@react-three/postprocessing";
-import { subVec } from "./func";
+import { EffectComposer, Noise, Vignette } from "@react-three/postprocessing";
 
 const NUM_PROJECTS_DEV = 20;
 
@@ -49,8 +38,6 @@ const Scene = () => {
     state.setTargetZoomFactor,
     state.move,
   ]);
-
-  console.log(projects);
 
   const [onSelect, selected] = useMainStore((state) => [
     state.onSelect,
@@ -234,7 +221,9 @@ const Scene = () => {
             </mesh>
           );
         })}
-      <Borders height={planeSize[1]} width={planeSize[0]} />
+      <Suspense>
+        <Borders height={planeSize[1]} width={planeSize[0]} />
+      </Suspense>
       <gridHelper
         args={[10000, 100, 0xffffff, 0xffffff]}
         rotation={[MathUtils.DEG2RAD * 90, 0, 0]}
