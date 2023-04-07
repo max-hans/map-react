@@ -1,7 +1,7 @@
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
 import { useMemo, FC, useRef } from "react";
-import { extend, useLoader } from "@react-three/fiber";
-import { Shape } from "three";
+import { extend, useLoader, useThree } from "@react-three/fiber";
+import { Shape, Vector2 } from "three";
 import { Center } from "@react-three/drei";
 
 import { MeshLineGeometry, MeshLineMaterial, raycast } from "meshline";
@@ -12,6 +12,7 @@ interface ShapeViewProps {
 }
 
 const D3ShapeView: FC<ShapeViewProps> = ({ shape }) => {
+  const { viewport } = useThree();
   const geo = useMemo(() => {
     const points = shape
       .extractPoints(1)
@@ -25,13 +26,8 @@ const D3ShapeView: FC<ShapeViewProps> = ({ shape }) => {
 
   return (
     <group>
-      <mesh>
-        <meshBasicMaterial
-          color={"lightgray"}
-          opacity={0.1}
-          transparent={true}
-          depthWrite={true}
-        />
+      {/* <mesh>
+        <meshBasicMaterial color={"red"} opacity={0.2} transparent={true} />
         <extrudeGeometry
           args={[
             shape,
@@ -40,11 +36,18 @@ const D3ShapeView: FC<ShapeViewProps> = ({ shape }) => {
             },
           ]}
         />
-      </mesh>
+      </mesh> */}
 
-      <mesh raycast={raycast} /* renderOrder={1000} */ position={[0, 0, -1]}>
-        <meshLineGeometry points={geo} />
-        <meshLineMaterial lineWidth={0.002} color="black" />
+      <mesh>
+        <meshLineGeometry
+          points={geo}
+          widthCallback={(p) => p * Math.random()}
+        />
+        <meshLineMaterial
+          lineWidth={0.005}
+          color="blue"
+          resolution={new Vector2(viewport.width, viewport.height)}
+        />
       </mesh>
     </group>
   );
