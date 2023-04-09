@@ -1,6 +1,32 @@
+import { shaderMaterial, useVideoTexture } from "@react-three/drei/web";
+import { extend, Object3DNode } from "@react-three/fiber";
 import { FC, useEffect } from "react";
+import { Texture } from "three";
 import { constrain } from "../../../func/data";
 import useVideo from "../../../hooks/useVideo";
+
+import DitherMaterial from "./shaders/ditherShaderMat";
+extend({ DitherMaterial });
+
+type DitherShaderImpl = {
+  map: Texture | Texture[];
+} & JSX.IntrinsicElements["shaderMaterial"];
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      ditherMaterial: DitherShaderImpl;
+    }
+  }
+}
+
+/* declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      ditherMaterial: ShaderMaterial;
+    }
+  }
+} */
 
 interface VideoMaterialProps {
   url: string;
@@ -40,12 +66,29 @@ const VideoMaterial: FC<VideoMaterialProps> = ({ url, position }) => {
     };
   }, []);
 
+  const texture = useVideoTexture(url, {
+    muted: true,
+    start: true,
+    loop: true,
+  });
+
   return video ? (
-    <meshStandardMaterial emissive="white" toneMapped={false} opacity={0.5}>
-      <videoTexture attach="emissiveMap" args={[video]} />
+    <ditherMaterial map={texture} key={DitherMaterial.key}>
       <videoTexture attach="map" args={[video]} />
-    </meshStandardMaterial>
+    </ditherMaterial>
   ) : null;
 };
 
 export default VideoMaterial;
+
+{
+  /*   <meshStandardMaterial
+    emissive="lightgray"
+    toneMapped={false}
+    opacity={1}
+    dithering
+  >
+    <videoTexture attach="emissiveMap" args={[video]} />
+    <videoTexture attach="map" args={[video]} />
+  </meshStandardMaterial>; */
+}

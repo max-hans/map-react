@@ -11,7 +11,7 @@ interface ShapeViewProps {
   shape: Shape;
 }
 
-const D3ShapeView: FC<ShapeViewProps> = ({ shape }) => {
+const ShapeView: FC<ShapeViewProps> = ({ shape }) => {
   const { viewport } = useThree();
   const geo = useMemo(() => {
     const points = shape
@@ -25,11 +25,11 @@ const D3ShapeView: FC<ShapeViewProps> = ({ shape }) => {
   /* https://github.com/pmndrs/meshline */
 
   return (
-    <mesh renderOrder={999}>
+    <mesh>
       <meshLineGeometry points={geo} widthCallback={(p) => p * Math.random()} />
       <meshLineMaterial
-        lineWidth={0.005}
-        color="blue"
+        lineWidth={0.004}
+        color="white"
         resolution={new Vector2(viewport.width, viewport.height)}
       />
     </mesh>
@@ -40,6 +40,7 @@ interface BordersProps {
   height: number;
   width: number;
 }
+
 const Borders: FC<BordersProps> = ({
   height: targetHeight,
   width: targetWidth,
@@ -62,15 +63,14 @@ const Borders: FC<BordersProps> = ({
   return (
     <Center
       onCentered={({ container, height, width }) => {
-        console.log(targetHeight);
         container.scale.setX(targetWidth / (width + 14.4));
         container.scale.setY(targetHeight / (height + 28.8) /* 14.4 */);
       }}
       scale={[1, 0.8, 1]}
     >
-      <group rotation={[Math.PI, 0, 0]}>
+      <group rotation={[Math.PI, 0, 0]} renderOrder={999} position={[0, 0, 2]}>
         {shapes.map((item) => (
-          <D3ShapeView {...item} key={item.index} />
+          <ShapeView {...item} key={item.index} />
         ))}
       </group>
     </Center>

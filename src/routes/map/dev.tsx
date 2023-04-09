@@ -28,7 +28,7 @@ const MapDev = () => {
             className="w-full"
             camera={{ fov: 75, near: 0.01, far: 200, position: [0, 0, 100] }}
           >
-            <color attach="background" args={["white"]} />
+            <color attach="background" args={["black"]} />
             <Scene />
           </Canvas>
         </div>

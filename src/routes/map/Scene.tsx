@@ -1,4 +1,4 @@
-import { useLoader, useThree } from "@react-three/fiber";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import { history } from "../../data/CONSTANTS";
@@ -21,7 +21,14 @@ import { projects } from "@/data";
 import positions from "../../data/raw/random-positions.json";
 import Borders from "./comps/Borders";
 
-import { EffectComposer, Noise, Vignette } from "@react-three/postprocessing";
+import {
+  DotScreen,
+  EffectComposer,
+  Noise,
+  Pixelation,
+  Vignette,
+} from "@react-three/postprocessing";
+import { BlendFunction } from "postprocessing";
 
 const NUM_PROJECTS_DEV = 20;
 
@@ -226,21 +233,27 @@ const Scene = () => {
       </Suspense>
       <gridHelper
         position={[0, 0, 10]}
-        args={[10000, 100, 0xffffff, 0xffffff]}
+        args={[
+          10000,
+          50 * Math.pow(2, targetZoomFactor / 2),
+          0xffffff,
+          0xffffff,
+        ]}
         rotation={[MathUtils.DEG2RAD * 90, 0, 0]}
         renderOrder={1000}
       />
       <EffectComposer>
         <Vignette eskil={false} offset={0.1} darkness={0.5} />
-        {/* <Pixelation
-          granularity={3} // pixel granularity
-        /> */}
-        <Noise opacity={0.3} />
-        {/* <DotScreen
-          blendFunction={BlendFunction.NORMAL} // blend mode
-          angle={Math.PI * 0.5} // angle of the dot pattern
-          scale={1} // scale of the dot pattern
-        /> */}
+        <Pixelation
+          granularity={1.5} // pixel granularity
+        />
+        <Noise opacity={0.2} />
+        <DotScreen
+          blendFunction={BlendFunction.MULTIPLY} // blend mode
+          angle={Math.PI * 0.2} // angle of the dot pattern
+          scale={10} // scale of the dot pattern
+          opacity={0.1}
+        />
       </EffectComposer>
     </>
   );
