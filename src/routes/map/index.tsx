@@ -10,10 +10,8 @@ import useUiStore from "@/stores/ui";
 
 import { Html } from "@react-three/drei";
 
-import { SSAOPass } from "three-stdlib";
 import ProjectInspector from "@/components/ProjectInspector";
 import { projects } from "@/data";
-extend({ SSAOPass });
 
 const Map = () => {
   const uiConfig = useUiStore();
@@ -32,7 +30,6 @@ const Map = () => {
       <div className="relative overflow-hidden h-full bg-green-300">
         <div className="w-full h-full z-0 absolute left-0 right-0 top-0 bottom-0">
           <Canvas
-            /* flat */
             resize={{}}
             orthographic
             className="w-full"
@@ -49,7 +46,6 @@ const Map = () => {
             <Suspense fallback={<Html center>Loading.</Html>}>
               <Scene />
             </Suspense>
-            {/* <OrthographicCamera position={[0, 0, 0]} /> */}
           </Canvas>
         </div>
         <ProjectInspector
