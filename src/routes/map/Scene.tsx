@@ -15,7 +15,7 @@ import { nanoid } from "nanoid";
 import { CameraControls } from "@react-three/drei";
 import { MAX_ZOOM, MIN_ZOOM } from "../../CONSTANTS";
 import { useEffectOnce } from "react-use";
-import { MathUtils, Mesh, TextureLoader } from "three";
+import { MathUtils, Mesh, TextureLoader, Vector3 } from "three";
 import { Vec2D } from "@/types/data";
 import { projects } from "@/data";
 import positions from "../../data/raw/random-positions.json";
@@ -29,8 +29,9 @@ import {
   Vignette,
 } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
+import { addVec } from "./func";
 
-const NUM_PROJECTS_DEV = 20;
+const PROJECT_CENTER_OFFSET: Vec2D = { x: 50, y: 50 };
 
 const calcWfromH = (h: number): number => {
   const w = h / (1080 / 1920);
@@ -39,89 +40,42 @@ const calcWfromH = (h: number): number => {
 
 const Scene = () => {
   const { viewport, camera } = useThree();
-  const scenarios = useLoader(TextureLoader, futures);
-  const [targetZoomFactor, setTargetZoomFactor, move] = useUiStore((state) => [
-    state.targetZoomFactor,
-    state.setTargetZoomFactor,
-    state.move,
-  ]);
 
-  const [onSelect, selected] = useMainStore((state) => [
-    state.onSelect,
-    state.selected,
-  ]);
-
+  /* refs */
+  const cameraControlsRef = useRef<CameraControls>(null);
+  const viewportSizeRef = useRef({ width: -1, height: -1 });
   const meshRef = useRef<Mesh>(null);
 
-  const viewportSizeRef = useRef({ width: -1, height: -1 });
-
+  /* state */
   const [pos, setPos] = useState<Vec2D>({ x: 0, y: 0 });
-
   const [planeSize] = useState(() => {
     const h = viewport.height;
     const w = calcWfromH(h);
     return [w, h];
   });
 
-  const updateCamera = (pos: Vec2D) => {
-    if (!cameraControlsRef.current) return;
-    cameraControlsRef.current.moveTo(pos.x, pos.y, 0, true);
-  };
-
-  const moveCamera = (dir: Partial<Vec2D>) => {
-    setPos(() => {
-      const tempPos = { ...pos };
-      const { width, height } = viewportSizeRef.current;
-
-      const maxX = (planeSize[0] - width / targetZoomFactor) / 2;
-      const maxY = (planeSize[1] - height / targetZoomFactor) / 2;
-
-      if (dir.x) {
-        tempPos.x = tempPos.x + dir.x;
-      }
-      if (dir.y) {
-        tempPos.y = tempPos.y + dir.y;
-      }
-      const newPos = {
-        x: constrain(tempPos.x, -maxX, maxX),
-        y: constrain(tempPos.y, -maxY, maxY),
-      };
-
-      return newPos;
-    });
-  };
-
-  /* const projects: Project[] = useMemo(() => {
-    let proj: Project[] = [];
-    for (let i = 0; i < NUM_PROJECTS_DEV; i++) {
-      proj.push({
-        ...projects[i % projects.length],
-        name: nanoid(),
-        position: { x: Math.random(), y: Math.random() },
-      });
-    }
-    return proj;
-  }, [projects]); */
-
-  const positionsIndexed = useMemo(
-    () => positions.map((e) => ({ ...e, id: nanoid() })),
-    [positions]
-  );
-
-  const [time, scenarioIndex, mode] = useMainStore((state) => [
-    state.time,
-    state.scenario,
-    state.mode,
+  /* stores */
+  const [targetZoomFactor, setTargetZoomFactor, move] = useUiStore((state) => [
+    state.targetZoomFactor,
+    state.setTargetZoomFactor,
+    state.move,
   ]);
 
-  const scaleToMeshSize = (pos: Vec2D): Vec2D => {
-    return {
-      x: pos.x * planeSize[0] - planeSize[0] / 2,
-      y: -pos.y * planeSize[1] + planeSize[1] / 2,
-    };
-  };
+  const [onSelect, selected, time, scenarioIndex, mode] = useMainStore(
+    (state) => [
+      state.onSelect,
+      state.selected,
+      state.time,
+      state.scenario,
+      state.mode,
+    ]
+  );
 
-  const cameraControlsRef = useRef<CameraControls>(null);
+  /* loaders */
+
+  const scenarios = useLoader(TextureLoader, futures);
+
+  /* effect */
 
   useEffectOnce(() => {
     if (!cameraControlsRef.current) return;
@@ -132,33 +86,84 @@ const Scene = () => {
     };
   });
 
+  const focusPosition = (position: Vec2D, zoom: number) => {
+    console.log("focus", position);
+    setPos(position);
+    setTargetZoomFactor(zoom);
+  };
+
   useEffect(() => {
     if (!cameraControlsRef.current) return;
+
+    const constrainedPos = getConstrainedPos(pos, targetZoomFactor);
+
+    console.log("constrained", constrainedPos);
+
+    let current: Vector3 | undefined = undefined;
+    cameraControlsRef.current.getPosition(current!);
+
+    console.log("current", cameraControlsRef.current.camera.position);
+
+    cameraControlsRef.current.moveTo(
+      constrainedPos.x,
+      constrainedPos.y,
+      0,
+      true
+    );
     cameraControlsRef.current.zoomTo(targetZoomFactor, true);
-    console.log("effect");
+  }, [targetZoomFactor, pos]);
 
-    moveCamera({});
-  }, [targetZoomFactor]);
+  /* apply new constrained position to  */
+  const getConstrainedPos = (dir: Partial<Vec2D>, zoom: number) => {
+    const tempPos = { ...pos };
+    const { width, height } = viewportSizeRef.current;
 
-  useEffect(() => {
-    updateCamera(pos);
-  }, [pos]);
+    const maxX = (planeSize[0] - width / zoom) / 2;
+    const maxY = (planeSize[1] - height / zoom) / 2;
 
+    if (dir.x) {
+      tempPos.x = tempPos.x + dir.x;
+    }
+    if (dir.y) {
+      tempPos.y = tempPos.y + dir.y;
+    }
+    const newPos = {
+      x: constrain(tempPos.x / 2, -maxX, maxX),
+      y: constrain(tempPos.y / 2, -maxY, maxY),
+    };
+
+    return newPos;
+  };
+
+  /* we get new directions from the controls */
   useEffect(() => {
     if (move) {
-      moveCamera(move);
+      const newPos: Vec2D = {
+        x: pos.x + (move.x || 0),
+        y: pos.y + (move.y || 0),
+      };
+      const constrained = getConstrainedPos(newPos, targetZoomFactor);
+      console.log("move", constrained);
+
+      setPos(constrained);
     }
   }, [move]);
 
-  const focusPosition = (position: Vec2D, zoom: number) => {
-    if (!cameraControlsRef.current) return;
-    cameraControlsRef.current.zoomTo(zoom, true);
-    updateCamera(position);
+  const positionsIndexed = useMemo(
+    () => positions.map((e) => ({ ...e, id: nanoid() })),
+    [positions]
+  );
+
+  const scaleToMeshSize = (pos: Vec2D): Vec2D => {
+    return {
+      x: pos.x * planeSize[0] - planeSize[0] / 2,
+      y: -pos.y * planeSize[1] + planeSize[1] / 2,
+    };
   };
 
   useEffect(() => {
     if (selected === null) {
-      focusPosition({ x: 0.5, y: 0.5 }, 1);
+      focusPosition({ x: pos.x, y: 0.5 }, 1);
     }
   }, [selected]);
 
@@ -195,28 +200,7 @@ const Scene = () => {
           <meshBasicMaterial attach="material" map={scenarios[scenarioIndex]} />
         )}
       </mesh>
-      {projects.map((p, i) => {
-        const projectPos = scaleToMeshSize(p.position);
 
-        if (p.time > time) return null;
-
-        return (
-          <mesh
-            position={[projectPos.x, projectPos.y, 0]}
-            key={`$project-${p.name}`}
-            onClick={() => {
-              console.log(projectPos);
-              focusPosition(projectPos, 3);
-              /* setTargetZoomFactor(2);
-              moveCamera(subVec(projectPos, pos)); */
-              onSelect(i % projects.length);
-            }}
-          >
-            <sphereGeometry args={[3, 16]} />
-            <meshBasicMaterial color="red" />
-          </mesh>
-        );
-      })}
       {positionsIndexed
         .slice(0, positionsIndexed.length * timeFloat)
         .map((p, i) => {
@@ -228,6 +212,28 @@ const Scene = () => {
             </mesh>
           );
         })}
+
+      {projects.map((p, i) => {
+        const projectPos = scaleToMeshSize(p.position);
+
+        if (p.time > time) return null;
+
+        return (
+          <mesh
+            position={[projectPos.x, projectPos.y, 0]}
+            key={`$project-${p.name}`}
+            onClick={() => {
+              console.log("project", projectPos);
+              focusPosition(addVec(projectPos, PROJECT_CENTER_OFFSET), 3);
+              /* moveCamera(subVec(projectPos, pos)); */
+              onSelect(i % projects.length);
+            }}
+          >
+            <sphereGeometry args={[3, 16]} />
+            <meshBasicMaterial color="red" />
+          </mesh>
+        );
+      })}
       <Suspense>
         <Borders height={planeSize[1]} width={planeSize[0]} />
       </Suspense>
