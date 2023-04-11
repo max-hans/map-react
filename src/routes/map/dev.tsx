@@ -7,9 +7,12 @@ import Frame from "./comps/Frame";
 import { Canvas } from "@react-three/fiber";
 import Scene from "./Scene";
 import useUiStore from "@/stores/ui";
+import ProjectInspector from "@/components/ProjectInspector";
+import { projects } from "@/data";
 
 const MapDev = () => {
   const uiConfig = useUiStore();
+  const [selected, setSelected] = useState<number | null>(null);
 
   useKeyPressEvent("ArrowUp", () => uiConfig.setMove({ y: -MOVE_DELTA }));
   useKeyPressEvent("ArrowDown", () => uiConfig.setMove({ y: MOVE_DELTA }));
@@ -32,6 +35,11 @@ const MapDev = () => {
             <Scene />
           </Canvas>
         </div>
+        <ProjectInspector
+          projects={projects}
+          selected={selected}
+          onDeselect={() => setSelected(null)}
+        />
       </div>
     </Frame>
   );
