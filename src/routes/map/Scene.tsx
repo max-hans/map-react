@@ -230,7 +230,7 @@ const Scene = () => {
             }}
           >
             <sphereGeometry args={[3, 16]} />
-            <meshBasicMaterial color="red" />
+            <meshBasicMaterial color="black" />
           </mesh>
         );
       })}
