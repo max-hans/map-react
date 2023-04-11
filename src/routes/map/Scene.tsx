@@ -223,8 +223,8 @@ const Scene = () => {
           const pos = scaleToMeshSize(p);
           return (
             <mesh position={[pos.x, pos.y, 0]} key={`$position-${p.id}`}>
-              <sphereGeometry args={[1, 16]} />
-              <meshBasicMaterial color="black" />
+              <sphereGeometry args={[4 / targetZoomFactor, 16]} />
+              <meshBasicMaterial color="white" />
             </mesh>
           );
         })}

@@ -1,11 +1,39 @@
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
 import { useMemo, FC } from "react";
 import { extend, useLoader, useThree } from "@react-three/fiber";
-import { Shape, Vector2 } from "three";
+import { BufferGeometry, ShaderMaterial, Shape, Vector2 } from "three";
 import { Center } from "@react-three/drei";
 
 import { MeshLineGeometry, MeshLineMaterial } from "meshline";
+import { Geometry } from "three-stdlib";
+
 extend({ MeshLineGeometry, MeshLineMaterial });
+
+type MeshLineGeometryImpl = {
+  points: number[];
+  widthCallback: (p: number) => number;
+} & JSX.IntrinsicElements["bufferGeometry"];
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      meshLineGeometry: MeshLineGeometryImpl;
+    }
+  }
+}
+
+type MeshLimeshLineMaterialImpl = {
+  resolution: Vector2;
+  lineWidth: number;
+} & JSX.IntrinsicElements["lineBasicMaterial"];
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      meshLineMaterial: MeshLimeshLineMaterialImpl;
+    }
+  }
+}
 
 interface ShapeViewProps {
   shape: Shape;
