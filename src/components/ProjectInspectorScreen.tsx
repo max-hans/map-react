@@ -15,10 +15,7 @@ const ProjectInspectorScreen: FC<ProjectInspectorScreenProps> = ({
 
   const [open, setOpen] = useState(false);
 
-  const [selected, onSelect] = useMainStore((state) => [
-    state.selected,
-    state.onSelect,
-  ]);
+  const [selected] = useMainStore((state) => [state.selected]);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -33,17 +30,15 @@ const ProjectInspectorScreen: FC<ProjectInspectorScreenProps> = ({
 
   return (
     <div
-      className={`absolute bottom-0 w-1/2 left-1/4 h-1/6 bg-white p-4 flex flex-col space-y-4
+      className={`absolute bottom-0 w-1/2 left-1/4 h-1/6 bg-white p-1 flex flex-col space-y-4 border-2 border-blue-700
 	transition-all ${open ? "" : "translate-y-full"}`}
       ref={ref}
     >
-      <div className="flex flex-col space-y-4 overflow-hidden">
+      <div className="flex flex-col overflow-hidden w-full h-full border-8 border-blue-800 p-2">
         {project && (
           <>
-            <h2 className="text-xs">{project.name}</h2>
-
+            <h2 className="text-md font-bold">{project.name}</h2>
             <p className="w-full text-xs">{project.description}</p>
-            <button onClick={() => onSelect(null)}>close</button>
           </>
         )}
       </div>
