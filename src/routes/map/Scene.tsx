@@ -22,6 +22,7 @@ import positions from "../../data/raw/random-positions.json";
 import Borders from "./comps/Borders";
 
 import {
+  Bloom,
   DotScreen,
   EffectComposer,
   Noise,
@@ -30,6 +31,7 @@ import {
 } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import { addVec } from "./func";
+import ProjectSphere from "./comps/ProjectSphere";
 
 const PROJECT_CENTER_OFFSET: Vec2D = { x: 50, y: 50 };
 
@@ -207,7 +209,7 @@ const Scene = () => {
           const pos = scaleToMeshSize(p);
           return (
             <mesh position={[pos.x, pos.y, 0]} key={`$position-${p.id}`}>
-              <sphereGeometry args={[4 / targetZoomFactor, 16]} />
+              <sphereGeometry args={[2 / targetZoomFactor, 16]} />
               <meshBasicMaterial color="white" />
             </mesh>
           );
@@ -219,19 +221,17 @@ const Scene = () => {
         if (p.time > time) return null;
 
         return (
-          <mesh
-            position={[projectPos.x, projectPos.y, 0]}
+          <ProjectSphere
             key={`$project-${p.name}`}
-            onClick={() => {
+            position={projectPos}
+            scaleFactor={targetZoomFactor}
+            onSelect={() => {
               console.log("project", projectPos);
               focusPosition(addVec(projectPos, PROJECT_CENTER_OFFSET), 3);
-              /* moveCamera(subVec(projectPos, pos)); */
               onSelect(i % projects.length);
             }}
-          >
-            <sphereGeometry args={[3, 16]} />
-            <meshBasicMaterial color="black" />
-          </mesh>
+            selected={selected === i}
+          />
         );
       })}
       <Suspense>
@@ -253,6 +253,7 @@ const Scene = () => {
         <Pixelation
           granularity={1.5} // pixel granularity
         />
+        <Bloom intensity={0.2} />
         <Noise opacity={0.2} />
         <DotScreen
           blendFunction={BlendFunction.MULTIPLY} // blend mode
