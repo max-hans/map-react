@@ -13,9 +13,13 @@ import { Html } from "@react-three/drei";
 import ProjectInspector from "@/components/ProjectInspector";
 import { projects } from "@/data";
 import ProjectInspectorScreen from "@/components/ProjectInspectorScreen";
+import TitleScreen from "@/components/TitleScreen";
+import useMainStore from "@/stores/main";
 
 const Map = () => {
   const uiConfig = useUiStore();
+
+  const time = useMainStore((state) => state.time);
 
   useKeyPressEvent("ArrowUp", () => uiConfig.setMove({ y: -MOVE_DELTA }));
   useKeyPressEvent("ArrowDown", () => uiConfig.setMove({ y: MOVE_DELTA }));
@@ -55,6 +59,8 @@ const Map = () => {
           selected={selected}
           onDeselect={() => setSelected(null)}
         />
+
+        {/* <TitleScreen temperature={0} time={time} /> */}
 
         <img
           src={deviceFrame}
