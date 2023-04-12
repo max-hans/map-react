@@ -9,16 +9,16 @@ import Slider from "./Slider";
 type Direction = "up" | "left" | "right" | "down";
 
 const Controller = () => {
-  const [time, setTime, scenario, setScenario, mode, setMode] = useMainStore(
-    (state) => [
+  const [time, setTime, scenario, setScenario, mode, setMode, onSelect] =
+    useMainStore((state) => [
       state.time,
       state.setTime,
       state.scenario,
       state.setScenario,
       state.mode,
       state.setMode,
-    ]
-  );
+      state.onSelect,
+    ]);
 
   const [collapse, setCollapse] = useState(false);
 
@@ -94,14 +94,13 @@ const Controller = () => {
           <h3 className="font-bold">mode</h3>
           <p className="italic">{mode}</p>
         </div>
-        <input
-          type="checkbox"
-          checked={mode === "FUTURE"}
-          onChange={(e) => {
-            setMode(e.target.checked ? "FUTURE" : "HISTORY");
-          }}
-        ></input>
       </div>
+      <button
+        onClick={() => onSelect(null)}
+        className="py-2 text-center w-full col-span-2 border border-gray-300 rounded-md"
+      >
+        deselect
+      </button>
       <h2>navigation</h2>
       <Slider
         title="zoom"
