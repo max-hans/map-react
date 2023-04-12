@@ -25,8 +25,6 @@ const Map = () => {
   useKeyPressEvent("ArrowRight", () => uiConfig.setMove({ x: MOVE_DELTA }));
   useKeyPressEvent("ArrowLeft", () => uiConfig.setMove({ x: -MOVE_DELTA }));
 
-  /* https://blog.promaton.com/camera-animations-with-r3f-and-react-spring-6fd378296c46 */
-
   const [selected, setSelected] = useState<number | null>(null);
 
   return (
