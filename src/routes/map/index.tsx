@@ -10,7 +10,6 @@ import useUiStore from "@/stores/ui";
 
 import { Html } from "@react-three/drei";
 
-import ProjectInspector from "@/components/ProjectInspector";
 import { projects } from "@/data";
 import ProjectInspectorScreen from "@/components/ProjectInspectorScreen";
 import TitleScreen from "@/components/TitleScreen";
@@ -60,7 +59,7 @@ const Map = () => {
           onDeselect={() => setSelected(null)}
         />
 
-        {/* <TitleScreen temperature={0} time={time} /> */}
+        <TitleScreen temperature={0} time={time} />
 
         <img
           src={deviceFrame}
