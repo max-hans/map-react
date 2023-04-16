@@ -62,7 +62,7 @@ Die Richtung wird auf die Zahlen von 0 bis 3 gemapped:
 ### Zoom
 
 ```
-Prefix: n
+Prefix: z
 Werte: 0-10
 ```
 
