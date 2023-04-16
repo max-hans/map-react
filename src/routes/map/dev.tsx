@@ -1,19 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import deviceFrame from "../../assets/device-frame.svg";
 import { useKeyPressEvent } from "react-use";
-import { MOVE_DELTA, YEARS_MAX, YEARS_MIN } from "@/CONSTANTS";
+import { MOVE_DELTA } from "@/CONSTANTS";
 import Frame from "./comps/Frame";
 import { Canvas } from "@react-three/fiber";
 import Scene from "./Scene";
 import useUiStore from "@/stores/ui";
 import ProjectInspector from "@/components/ProjectInspector";
-import { projects, scenarios } from "@/data";
-import useSocketIo from "@/hooks/useSocketio";
-import { Vec2D } from "@/types/data";
-import { directionToVector } from "@/func/socket";
-import useMainStore from "@/stores/main";
-import { constrain, remap } from "@/func/data";
+import { projects } from "@/data";
 import SocketAdapter from "@/components/SocketAdapter";
 
 const MapDev = () => {
