@@ -246,7 +246,11 @@ const Scene = () => {
         );
       })}
       <Suspense>
-        <Borders height={planeSize[1]} width={planeSize[0]} />
+        <Borders
+          height={planeSize[1]}
+          width={planeSize[0]}
+          thicknessFactor={currentZoom}
+        />
       </Suspense>
       {/* <gridHelper
         position={[0, 0, 10]}

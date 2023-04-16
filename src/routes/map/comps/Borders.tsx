@@ -37,9 +37,10 @@ declare global {
 
 interface ShapeViewProps {
   shape: Shape;
+  thickness: number;
 }
 
-const ShapeView: FC<ShapeViewProps> = ({ shape }) => {
+const ShapeView: FC<ShapeViewProps> = ({ shape, thickness }) => {
   const { viewport } = useThree();
   const geo = useMemo(() => {
     const points = shape
@@ -56,7 +57,7 @@ const ShapeView: FC<ShapeViewProps> = ({ shape }) => {
     <mesh>
       <meshLineGeometry points={geo} widthCallback={(p) => p * Math.random()} />
       <meshLineMaterial
-        lineWidth={0.004}
+        lineWidth={thickness}
         color="white"
         resolution={new Vector2(viewport.width, viewport.height)}
       />
@@ -67,11 +68,13 @@ const ShapeView: FC<ShapeViewProps> = ({ shape }) => {
 interface BordersProps {
   height: number;
   width: number;
+  thicknessFactor: number;
 }
 
 const Borders: FC<BordersProps> = ({
   height: targetHeight,
   width: targetWidth,
+  thicknessFactor,
 }) => {
   const data = useLoader(SVGLoader, "/borders_3_repair.svg");
 
@@ -99,7 +102,11 @@ const Borders: FC<BordersProps> = ({
     >
       <group rotation={[Math.PI, 0, 0]} renderOrder={999} position={[0, 0, 2]}>
         {shapes.map((item) => (
-          <ShapeView {...item} key={item.index} />
+          <ShapeView
+            {...item}
+            key={item.index}
+            thickness={0.004 * thicknessFactor}
+          />
         ))}
       </group>
     </Center>
