@@ -91,8 +91,9 @@ const Borders: FC<BordersProps> = ({
   return (
     <Center
       onCentered={({ container, height, width }) => {
-        container.scale.setX(targetWidth / (width + 14.4));
-        container.scale.setY(targetHeight / (height + 28.8) /* 14.4 */);
+        container.scale.setX(targetWidth / width);
+        container.scale.setY(targetHeight / (height + 24) /* 14.4 */);
+        container.position.set(0, -6, 0);
       }}
       scale={[1, 0.8, 1]}
     >
