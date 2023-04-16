@@ -63,10 +63,10 @@ Die Richtung wird auf die Zahlen von 0 bis 3 gemapped:
 
 ```
 Prefix: z
-Werte: 0-10
+Werte: 0 & 1
 ```
 
-Die Zoom-Stufen werden von 0 - 100 gemapped (wird später in realed Werte umgerechnet).
+Beim Hereinzoomen wird Wert 1 geschickt, beim Herauszoome Wert 0
 
-- Maximal herausgezoomed: 0 -> `z,0`
-- Maximal hineingezoomed: 0 -> `z,100`
+- Hereinzoomen: 1 -> `z,1`
+- Herauszoomen: 0 -> `z,0`
