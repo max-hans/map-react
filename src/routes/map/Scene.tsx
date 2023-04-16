@@ -169,6 +169,17 @@ const Scene = () => {
     }
   }, [selected]);
 
+  const [currentZoom, setCurrentZoom] = useState<number>(1);
+
+  useFrame(() => {
+    if (!cameraControlsRef.current) return;
+    const currentScaleFactor = cameraControlsRef.current.camera.zoom;
+    const delta = Math.abs(currentScaleFactor - targetZoomFactor);
+    if (delta > 0.1) {
+      setCurrentZoom(currentScaleFactor);
+    }
+  });
+
   const timeFloat = remap(time, 1950, 2020, 0, 1);
 
   return (
@@ -224,7 +235,7 @@ const Scene = () => {
           <ProjectSphere
             key={`$project-${p.name}`}
             position={projectPos}
-            scaleFactor={targetZoomFactor}
+            scaleFactor={currentZoom}
             onSelect={() => {
               console.log("project", projectPos);
               focusPosition(addVec(projectPos, PROJECT_CENTER_OFFSET), 3);
@@ -237,24 +248,19 @@ const Scene = () => {
       <Suspense>
         <Borders height={planeSize[1]} width={planeSize[0]} />
       </Suspense>
-      <gridHelper
+      {/* <gridHelper
         position={[0, 0, 10]}
-        args={[
-          10000,
-          50 * Math.pow(2, targetZoomFactor / 2),
-          0xffffff,
-          0xffffff,
-        ]}
+        args={[10000, 50 * Math.pow(2, currentZoom / 2), 0xffffff, 0xffffff]}
         rotation={[MathUtils.DEG2RAD * 90, 0, 0]}
         renderOrder={1000}
-      />
+      /> */}
       <EffectComposer>
-        <Vignette eskil={false} offset={0.1} darkness={0.5} />
+        <Vignette eskil={false} offset={0.1} darkness={0.8} />
         <Pixelation
           granularity={1.5} // pixel granularity
         />
         <Bloom intensity={0.2} />
-        <Noise opacity={0.2} />
+        <Noise opacity={0.05} />
         <DotScreen
           blendFunction={BlendFunction.MULTIPLY} // blend mode
           angle={Math.PI * 0.2} // angle of the dot pattern
