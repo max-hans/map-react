@@ -20,7 +20,9 @@ const Slider: FC<SliderProps> = ({
     <div className="w-full">
       <div className="flex flex-row justify-between">
         <h3 className="font-bold">{title}</h3>
-        <p className="italic">{useFloat ? value : Math.floor(value)}</p>
+        <p className="italic">
+          {useFloat ? value.toFixed(1) : Math.floor(value)}
+        </p>
       </div>
       <input
         className="w-full"
