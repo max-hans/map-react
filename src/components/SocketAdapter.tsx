@@ -5,15 +5,20 @@ import {
   ZOOM_DELTA,
   ZOOM_FRAME_DELTA,
   ZOOM_INTERVAL,
+  MOVEMENT_THRESHOLD,
+  MOVEMENT_SCALE_FACTOR,
 } from "@/CONSTANTS";
 import { scenarios } from "@/data";
 import { remap, constrain } from "@/func/data";
-import { directionToVector } from "@/func/socket";
 import useSocketIo from "@/hooks/useSocketio";
 import useMainStore from "@/stores/main";
 import useUiStore from "@/stores/ui";
 import { useEffect, useState } from "react";
 import { useInterval } from "react-use";
+
+const allDefinedAndNotZero = (...args: Array<number | undefined>) => {
+  return args.some((elem) => !!elem);
+};
 
 const SocketAdapter = ({ topic }: { topic: string }) => {
   const uiConfig = useUiStore();
@@ -23,25 +28,34 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
 
   const [zoomDelta, setZoomingDelta] = useState(0);
 
-  useInterval(() => {
-    if (!zoomDelta) return;
-    uiConfig.incrementTargetZoomFactor(zoomDelta);
-  }, ZOOM_INTERVAL);
+  const [xDelta, setXDelta] = useState(0);
+  const [yDelta, setYDelta] = useState(0);
+
+  useInterval(
+    () => {
+      console.log("interval");
+
+      if (zoomDelta) uiConfig.incrementTargetZoomFactor(zoomDelta);
+
+      if (xDelta || yDelta) {
+        const delta = { x: xDelta, y: yDelta };
+        console.log("delta", delta);
+        uiConfig.setMove(delta);
+      }
+    },
+    allDefinedAndNotZero(zoomDelta, xDelta, yDelta) ? ZOOM_INTERVAL : null
+  );
 
   useEffect(() => {
     if (!lastMessage) return;
     const { command, value } = lastMessage;
+
+    if (command === "x") {
+      console.log(command, value);
+    }
     switch (command) {
       case "z": {
         setZoomingDelta(ZOOM_FRAME_DELTA * value);
-        break;
-      }
-
-      case "n": {
-        let direction = directionToVector(value, MOVE_DELTA);
-        console.log(direction);
-
-        uiConfig.setMove(direction);
         break;
       }
 
@@ -52,6 +66,18 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
           YEARS_MAX
         );
         mainStore.setTime(year);
+        break;
+      }
+
+      case "x": {
+        if (Math.abs(value) > MOVEMENT_THRESHOLD)
+          setXDelta(value * MOVEMENT_SCALE_FACTOR);
+        break;
+      }
+
+      case "y": {
+        if (Math.abs(value) > MOVEMENT_THRESHOLD)
+          setYDelta(value * MOVEMENT_SCALE_FACTOR);
         break;
       }
 

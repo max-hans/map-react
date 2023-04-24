@@ -14,3 +14,6 @@ export const ZOOM_INTERVAL = 25;
 
 export const YEARS_MIN = 1950;
 export const YEARS_MAX = 2020;
+
+export const MOVEMENT_THRESHOLD = 10;
+export const MOVEMENT_SCALE_FACTOR = 0.1;
