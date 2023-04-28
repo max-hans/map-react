@@ -21,8 +21,14 @@ const allDefinedAndNotZero = (...args: Array<number | undefined>) => {
 };
 
 const SocketAdapter = ({ topic }: { topic: string }) => {
-  const uiConfig = useUiStore();
-  const mainStore = useMainStore();
+  const [incrementTargetZoomFactor, setMove] = useUiStore((state) => [
+    state.incrementTargetZoomFactor,
+    state.setMove,
+  ]);
+  const [setTime, setScenario] = useMainStore((state) => [
+    state.setTime,
+    state.setScenario,
+  ]);
 
   const { lastMessage } = useSocketIo({ topic });
 
@@ -35,12 +41,12 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
     () => {
       console.log("interval");
 
-      if (zoomDelta) uiConfig.incrementTargetZoomFactor(zoomDelta);
+      if (zoomDelta) incrementTargetZoomFactor(zoomDelta);
 
       if (xDelta || yDelta) {
         const delta = { x: xDelta, y: yDelta };
         console.log("delta", delta);
-        uiConfig.setMove(delta);
+        setMove(delta);
       }
     },
     allDefinedAndNotZero(zoomDelta, xDelta, yDelta) ? ZOOM_INTERVAL : null
@@ -65,7 +71,7 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
           YEARS_MIN,
           YEARS_MAX
         );
-        mainStore.setTime(year);
+        setTime(year);
         break;
       }
 
@@ -83,7 +89,7 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
 
       case "s": {
         let scenario = constrain(value, 0, scenarios.length - 1);
-        mainStore.setScenario(scenario);
+        setScenario(scenario);
         break;
       }
     }

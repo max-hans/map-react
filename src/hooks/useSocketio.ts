@@ -42,6 +42,7 @@ const useSocketIo = ({ topic }: { topic: string }) => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off(topic, onMessageEvent);
+      socket.removeAllListeners();
     };
   }, []);
 
