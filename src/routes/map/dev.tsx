@@ -1,23 +1,14 @@
 import { useState } from "react";
 
-import { useKeyPressEvent } from "react-use";
-import { MOVE_DELTA } from "@/CONSTANTS";
 import Frame from "./comps/Frame";
 import { Canvas } from "@react-three/fiber";
 import Scene from "./Scene";
-import useUiStore from "@/stores/ui";
 import ProjectInspector from "@/components/ProjectInspector";
 import { projects } from "@/data";
 import SocketAdapter from "@/components/SocketAdapter";
 
 const MapDev = () => {
-  const uiConfig = useUiStore();
   const [selected, setSelected] = useState<number | null>(null);
-
-  useKeyPressEvent("ArrowUp", () => uiConfig.setMove({ y: -MOVE_DELTA }));
-  useKeyPressEvent("ArrowDown", () => uiConfig.setMove({ y: MOVE_DELTA }));
-  useKeyPressEvent("ArrowRight", () => uiConfig.setMove({ x: MOVE_DELTA }));
-  useKeyPressEvent("ArrowLeft", () => uiConfig.setMove({ x: -MOVE_DELTA }));
 
   /* https://blog.promaton.com/camera-animations-with-r3f-and-react-spring-6fd378296c46 */
 
