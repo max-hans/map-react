@@ -2,10 +2,11 @@ import { remap, validateProjectType } from "../func/data";
 import { Project, Scenario } from "../types/data";
 
 import projectsRaw from "./raw/projects.csv?raw";
+import futureProjectsRaw from "./raw/future-projects.csv?raw";
 import scenariosRaw from "./raw/scenarios.csv?raw";
 
-export const projects: Project[] = (() => {
-  const [_, ...data] = projectsRaw.split("\n").filter((line) => line.length);
+const extractProjectsFromCSV = (input: string): Project[] => {
+  const [_, ...data] = input.split("\n").filter((line) => line.length);
 
   const fields = data
     .map((line) => {
@@ -19,18 +20,24 @@ export const projects: Project[] = (() => {
           },
           type: validateProjectType(frags[2]),
           time: parseInt(frags[3]),
-          description: frags[1],
           imgSrc: frags[6],
+          power: parseFloat(frags[1]),
+          description: "",
         };
         return project;
       } catch (e) {
+        console.log(e);
         throw Error(`malformed data for item: ${frags[0]}`);
       }
     })
     .filter((elem): elem is Project => elem !== undefined);
   console.log(fields);
   return fields;
-})();
+};
+
+export const projects: Project[] = extractProjectsFromCSV(projectsRaw);
+export const futureProjects: Project[] =
+  extractProjectsFromCSV(futureProjectsRaw);
 
 export const scenarios: Scenario[] = (() => {
   const [_, ...data] = scenariosRaw.split("\n").filter((line) => line.length);
