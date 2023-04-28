@@ -13,9 +13,9 @@ export interface Vec2D {
   y: number;
 }
 
-export const ProjectTypes = ["wind", "solar", "hydro", "other"] as const;
+export const ProjectTypes = ["wind", "solar", "hydro", "other", "geo"] as const;
 
-export type ProjectType = typeof ProjectTypes[number];
+export type ProjectType = (typeof ProjectTypes)[number];
 
 export interface Project {
   position: Vec2D;
@@ -24,6 +24,7 @@ export interface Project {
   name: string;
   description: string;
   imgSrc: string;
+  power: number;
 }
 
 export type DisplayMode = "HISTORY" | "FUTURE";
