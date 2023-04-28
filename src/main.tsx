@@ -6,6 +6,8 @@ import Root from "./App";
 import Map from "./routes/map";
 import "./index.css";
 import MapDev from "./routes/map/dev";
+import Title from "./routes/data/title";
+import ProjectScreen from "./routes/data/project";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
   {
     path: "/dev",
     element: <MapDev />,
+  },
+  {
+    path: "/data/title",
+    element: <Title />,
+  },
+  {
+    path: "/data/project",
+    element: <ProjectScreen />,
   },
 ]);
 
