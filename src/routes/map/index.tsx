@@ -1,12 +1,9 @@
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useState } from "react";
 
 import deviceFrame from "../../assets/device-frame.svg";
-import { useKeyPressEvent } from "react-use";
-import { MOVE_DELTA } from "@/CONSTANTS";
 import Frame from "./comps/Frame";
-import { Canvas, extend, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import Scene from "./Scene";
-import useUiStore from "@/stores/ui";
 
 import { Html } from "@react-three/drei";
 
@@ -16,14 +13,7 @@ import TitleScreen from "@/components/TitleScreen";
 import useMainStore from "@/stores/main";
 
 const Map = () => {
-  const uiConfig = useUiStore();
-
   const time = useMainStore((state) => state.time);
-
-  useKeyPressEvent("ArrowUp", () => uiConfig.setMove({ y: -MOVE_DELTA }));
-  useKeyPressEvent("ArrowDown", () => uiConfig.setMove({ y: MOVE_DELTA }));
-  useKeyPressEvent("ArrowRight", () => uiConfig.setMove({ x: MOVE_DELTA }));
-  useKeyPressEvent("ArrowLeft", () => uiConfig.setMove({ x: -MOVE_DELTA }));
 
   const [selected, setSelected] = useState<number | null>(null);
 
