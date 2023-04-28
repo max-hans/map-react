@@ -9,8 +9,8 @@ export const MAX_ZOOM = 5;
 export const MOVE_DELTA = 100;
 export const ZOOM_DELTA = 0.5;
 
-export const ZOOM_FRAME_DELTA = 0.05;
-export const ZOOM_INTERVAL = 25;
+export const ZOOM_FRAME_DELTA = 0.01;
+export const ZOOM_INTERVAL = 50;
 
 export const YEARS_MIN = 1950;
 export const YEARS_MAX = 2020;
