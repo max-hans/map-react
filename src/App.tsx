@@ -5,6 +5,8 @@ export default function Root() {
         <h2 className="underline">links</h2>
         <a href="/dev">developer view</a>
         <a href="/map">preview view</a>
+        <a href="/data/project">project</a>
+        <a href="/data/title">title</a>
       </div>
     </div>
   );
