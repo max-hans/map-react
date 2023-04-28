@@ -17,7 +17,7 @@ import { MAX_ZOOM, MIN_ZOOM } from "../../CONSTANTS";
 import { useEffectOnce } from "react-use";
 import { MathUtils, Mesh, TextureLoader, Vector3 } from "three";
 import { Vec2D } from "@/types/data";
-import { projects } from "@/data";
+import { projects, futureProjects } from "@/data";
 import positions from "../../data/raw/random-positions.json";
 import Borders from "./comps/Borders";
 
@@ -229,7 +229,7 @@ const Scene = () => {
       {projects.map((p, i) => {
         const projectPos = scaleToMeshSize(p.position);
 
-        if (p.time > time) return null;
+        if (p.time > time && mode !== "FUTURE") return null;
 
         return (
           <ProjectSphere
@@ -245,6 +245,28 @@ const Scene = () => {
           />
         );
       })}
+
+      {mode === "FUTURE" &&
+        futureProjects.map((p, i) => {
+          const projectPos = scaleToMeshSize(p.position);
+
+          if (p.time > time) return null;
+
+          return (
+            <ProjectSphere
+              key={`$project-${p.name}`}
+              position={projectPos}
+              scaleFactor={currentZoom}
+              onSelect={() => {
+                console.log("project", projectPos);
+                focusPosition(addVec(projectPos, PROJECT_CENTER_OFFSET), 3);
+                onSelect(i % projects.length);
+              }}
+              selected={selected === i}
+            />
+          );
+        })}
+
       <Suspense>
         <Borders
           height={planeSize[1]}
@@ -263,7 +285,7 @@ const Scene = () => {
         <Pixelation
           granularity={1.5} // pixel granularity
         />
-        <Bloom intensity={0.2} />
+        {/* <Bloom intensity={0.2} /> */}
         <Noise opacity={0.05} />
         <DotScreen
           blendFunction={BlendFunction.MULTIPLY} // blend mode
