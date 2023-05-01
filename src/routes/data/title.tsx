@@ -25,17 +25,13 @@ const Title: FunctionComponent<TitleProps> = () => {
       ? getTemperatureForYear(time)
       : getTemperatureForScenario(scenario);
 
-  const yearRaw = Math.floor(mode === "HISTORY" ? time : 2100);
-
-  const { year } = useSpring({ year: yearRaw });
+  const year = Math.floor(mode === "HISTORY" ? time : 2100);
 
   return (
     <div className="fixed w-screen h-screen bg-white flex flex-col justify-center items-center">
       <div className="flex flex-col space-y-32 items-center relative">
         <h2 className="text-[200px] w-full">{formatTemp(temperature, 2)} °C</h2>
-        <h2 className="absolute top-[100%] text-4xl">
-          year: {year.isAnimating ? "yes" : "no"}
-        </h2>
+        <h2 className="absolute top-[100%] text-4xl">year: {year}</h2>
       </div>
     </div>
   );
