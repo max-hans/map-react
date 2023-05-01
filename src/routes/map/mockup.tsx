@@ -12,7 +12,7 @@ import ProjectInspectorScreen from "@/components/ProjectInspectorScreen";
 import TitleScreen from "@/components/TitleScreen";
 import useMainStore from "@/stores/main";
 
-const Map = () => {
+const Mockup = () => {
   const time = useMainStore((state) => state.time);
 
   const [selected, setSelected] = useState<number | null>(null);
@@ -57,4 +57,4 @@ const Map = () => {
     </Frame>
   );
 };
-export default Map;
+export default Mockup;

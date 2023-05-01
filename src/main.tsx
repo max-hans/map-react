@@ -3,13 +3,14 @@ import ReactDOM from "react-dom/client";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./App";
-import Map from "./routes/map";
 import "./index.css";
 import MapDev from "./routes/map/dev";
 import Title from "./routes/data/title";
 import ProjectScreen from "./routes/data/project";
 import SocketAdapter from "./components/SocketAdapter";
 import Controller from "./components/Contoller";
+import Mockup from "./routes/map/mockup";
+import FullMapView from "./routes/map/full";
 
 const router = createBrowserRouter([
   {
@@ -18,12 +19,16 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/map",
-    element: <Map />,
+    path: "/mockup",
+    element: <Mockup />,
   },
   {
     path: "/dev",
     element: <MapDev />,
+  },
+  {
+    path: "/full",
+    element: <FullMapView />,
   },
   {
     path: "/data/title",
