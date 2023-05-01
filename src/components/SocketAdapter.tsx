@@ -12,6 +12,7 @@ import { remap, constrain } from "@/func/data";
 import useSocketIo from "@/hooks/useSocketio";
 import useMainStore from "@/stores/main";
 import useUiStore from "@/stores/ui";
+import { DisplayMode } from "@/types/data";
 import { useEffect, useState } from "react";
 import { useInterval, useTimeoutFn } from "react-use";
 
@@ -24,9 +25,10 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
     state.incrementTargetZoomFactor,
     state.setMove,
   ]);
-  const [setTime, setScenario] = useMainStore((state) => [
+  const [setTime, setScenario, setMode] = useMainStore((state) => [
     state.setTime,
     state.setScenario,
+    state.setMode,
   ]);
 
   const { lastMessage } = useSocketIo({ topic });
@@ -95,6 +97,12 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
       case "s": {
         let scenario = constrain(value, 0, scenarios.length - 1);
         setScenario(scenario);
+        break;
+      }
+
+      case "m": {
+        const mode: DisplayMode = value === 0 ? "HISTORY" : "FUTURE";
+        setMode(mode);
         break;
       }
     }

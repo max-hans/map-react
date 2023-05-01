@@ -93,6 +93,18 @@ const Controller = () => {
         <div className="flex flex-row justify-between">
           <h3 className="font-bold">mode</h3>
           <p className="italic">{mode}</p>
+          <button
+            onClick={() => setMode("HISTORY")}
+            className="py-2 text-center w-full col-span-2 border border-gray-300 rounded-md"
+          >
+            history
+          </button>
+          <button
+            onClick={() => setMode("FUTURE")}
+            className="py-2 text-center w-full col-span-2 border border-gray-300 rounded-md"
+          >
+            future
+          </button>
         </div>
       </div>
       <button

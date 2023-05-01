@@ -68,3 +68,13 @@ Beim Hereinzoomen wird Wert 1 geschickt, beim Herauszoome Wert 0
 
 - Hereinzoomen: 100 -> `z,100`
 - Herauszoomen: -100 -> `z,-100`
+
+### Modus
+
+```
+Prefix: m
+Werte: 0 = historische Daten, 1 = Zukunft
+```
+
+- Historisch: 0 -> `m,0`
+- Herauszoomen: 1 -> `m,1`

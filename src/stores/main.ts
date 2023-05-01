@@ -15,9 +15,9 @@ interface MainState {
 
 const useMainStore = create<MainState>((set, get) => ({
   time: 1950,
-  setTime: (v) => set({ time: v, mode: "HISTORY" }),
+  setTime: (v) => set({ time: v }),
   scenario: 0,
-  setScenario: (v) => set({ scenario: v, mode: "FUTURE" }),
+  setScenario: (v) => set({ scenario: v }),
   mode: "HISTORY",
   setMode: (v) => set({ mode: v }),
   selected: null,
