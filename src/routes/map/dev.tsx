@@ -14,7 +14,6 @@ const MapDev = () => {
 
   return (
     <>
-      <SocketAdapter topic="/" />
       <Frame>
         <div className="relative overflow-hidden h-full w-full">
           <div className="w-full h-full z-0 absolute left-0 right-0 top-0 bottom-0 bg-blue-300">

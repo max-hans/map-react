@@ -8,6 +8,7 @@ import "./index.css";
 import MapDev from "./routes/map/dev";
 import Title from "./routes/data/title";
 import ProjectScreen from "./routes/data/project";
+import SocketAdapter from "./components/SocketAdapter";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <main className="app w-screen h-screen bg-black overflow-hidden">
+      <SocketAdapter topic="/" />
       <RouterProvider router={router} />
     </main>
   </React.StrictMode>
