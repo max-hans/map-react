@@ -1,6 +1,5 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode } from "react";
 
-import Controller from "../../../components/Contoller";
 import useUiStore from "../../../stores/ui";
 
 import { useKeyPressEvent } from "react-use";
@@ -11,8 +10,6 @@ interface FrameProps {
 }
 
 const Frame: FC<FrameProps> = ({ children }) => {
-  const [selected, setSelected] = useState<number | null>(null);
-
   const uiConfig = useUiStore();
 
   useKeyPressEvent("ArrowUp", () => uiConfig.setMove({ y: -MOVE_DELTA }));
