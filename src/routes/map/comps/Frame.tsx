@@ -1,14 +1,8 @@
-import { FC, ReactNode, useCallback, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 
-import { Canvas } from "@react-three/fiber";
-
-import ProjectInspector from "../../../components/ProjectInspector";
-import { projects } from "../../../data";
 import Controller from "../../../components/Contoller";
 import useUiStore from "../../../stores/ui";
-import Scene from "../Scene";
 
-import deviceFrame from "../../assets/device-frame.svg";
 import { useKeyPressEvent } from "react-use";
 import { MOVE_DELTA } from "@/CONSTANTS";
 
@@ -33,12 +27,6 @@ const Frame: FC<FrameProps> = ({ children }) => {
       <div className="w-full h-full flex flex-col justify-center items-center p-8 relative">
         {children}
       </div>
-      {/* <ProjectInspector
-        projects={projects}
-        selected={selected}
-        onDeselect={() => setSelected(null)}
-      /> */}
-      <Controller />
     </>
   );
 };
