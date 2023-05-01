@@ -5,9 +5,11 @@ export const remap = (
   low1: number,
   high1: number,
   low2: number,
-  high2: number
+  high2: number,
+  doConstrain = false
 ): number => {
-  return low2 + ((high2 - low2) * (value - low1)) / (high1 - low1);
+  const val = low2 + ((high2 - low2) * (value - low1)) / (high1 - low1);
+  return doConstrain ? constrain(val, low2, high2) : val;
 };
 
 export const validateProjectType = (t: string) => {
