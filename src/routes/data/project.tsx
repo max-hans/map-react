@@ -1,7 +1,6 @@
 import { FC, useRef } from "react";
 import useMainStore from "@/stores/main";
 import { projects } from "@/data";
-import Controller from "@/components/Contoller";
 
 interface ProjectScreenProps {}
 
