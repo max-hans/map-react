@@ -1,7 +1,6 @@
-import { Vec2D } from "@/types/data";
 import { useState } from "react";
 import { MAX_ZOOM, MIN_ZOOM, MOVE_DELTA } from "../CONSTANTS";
-import { scenarios } from "../data";
+import { projects, scenarios } from "../data";
 import useMainStore from "../stores/main";
 import useUiStore from "../stores/ui";
 import Slider from "./Slider";
@@ -47,6 +46,11 @@ const Controller = () => {
 
   const handleScrub = (d: number) => {
     setTime(time + d);
+  };
+
+  const selectRandomProject = () => {
+    const idx = Math.floor(Math.random() * projects.length);
+    onSelect(idx);
   };
 
   return (
@@ -149,6 +153,12 @@ const Controller = () => {
           down
         </button>
       </div>
+      <button
+        onClick={selectRandomProject}
+        className="py-2 text-center w-full col-span-2 border border-gray-300 rounded-md"
+      >
+        select random project
+      </button>
       <h2>view</h2>
       <div className="w-full flex flex-row space-x-4">
         <div className="underline text-blue-600">
