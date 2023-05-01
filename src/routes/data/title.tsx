@@ -1,5 +1,6 @@
-import { getTemperatureForYear } from "@/data/temp";
+import { getTemperatureForScenario, getTemperatureForYear } from "@/data/temp";
 import useMainStore from "@/stores/main";
+import { animated, useSpring } from "@react-spring/web";
 import { FunctionComponent } from "react";
 
 const formatTemp = (num: number, precision?: number): string => {
@@ -9,20 +10,31 @@ const formatTemp = (num: number, precision?: number): string => {
   }
   return `${numString}`;
 };
-/* asdf */
+
 interface TitleProps {}
 
 const Title: FunctionComponent<TitleProps> = () => {
-  const [time] = useMainStore((state) => [state.time]);
+  const [time, mode, scenario] = useMainStore((state) => [
+    state.time,
+    state.mode,
+    state.scenario,
+  ]);
 
-  const temperature = getTemperatureForYear(time);
-  console.log(time, temperature);
+  const temperature =
+    mode === "HISTORY"
+      ? getTemperatureForYear(time)
+      : getTemperatureForScenario(scenario);
+
+  const yearRaw = Math.floor(mode === "HISTORY" ? time : 2100);
+
+  const { year } = useSpring({ year: yearRaw });
+
   return (
     <div className="fixed w-screen h-screen bg-white flex flex-col justify-center items-center">
-      <div className="flex flex-col space-y-24 items-center relative">
+      <div className="flex flex-col space-y-32 items-center relative">
         <h2 className="text-[200px] w-full">{formatTemp(temperature, 2)} °C</h2>
         <h2 className="absolute top-[100%] text-4xl">
-          year: {Math.floor(time)}
+          year: {year.isAnimating ? "yes" : "no"}
         </h2>
       </div>
     </div>
