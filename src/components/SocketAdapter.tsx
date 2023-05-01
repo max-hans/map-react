@@ -1,12 +1,11 @@
 import {
-  MOVE_DELTA,
   YEARS_MIN,
   YEARS_MAX,
-  ZOOM_DELTA,
   ZOOM_FRAME_DELTA,
   ZOOM_INTERVAL,
   MOVEMENT_THRESHOLD,
   MOVEMENT_SCALE_FACTOR,
+  MESSAGE_TIMEOUT,
 } from "@/CONSTANTS";
 import { scenarios } from "@/data";
 import { remap, constrain } from "@/func/data";
@@ -14,7 +13,7 @@ import useSocketIo from "@/hooks/useSocketio";
 import useMainStore from "@/stores/main";
 import useUiStore from "@/stores/ui";
 import { useEffect, useState } from "react";
-import { useInterval } from "react-use";
+import { useInterval, useTimeoutFn } from "react-use";
 
 const allDefinedAndNotZero = (...args: Array<number | undefined>) => {
   return args.some((elem) => !!elem);
@@ -37,15 +36,21 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
   const [xDelta, setXDelta] = useState(0);
   const [yDelta, setYDelta] = useState(0);
 
+  /* just in case no new messages for a relative move come in
+  -> reset them after certain time */
+
+  const [_isReady, _cancel, reset] = useTimeoutFn(() => {
+    setXDelta(0);
+    setYDelta(0);
+    setZoomingDelta(0);
+  }, MESSAGE_TIMEOUT);
+
   useInterval(
     () => {
-      console.log("interval");
-
       if (zoomDelta) incrementTargetZoomFactor(zoomDelta);
 
       if (xDelta || yDelta) {
         const delta = { x: xDelta, y: yDelta };
-        console.log("delta", delta);
         setMove(delta);
       }
     },
@@ -56,11 +61,9 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
     if (!lastMessage) return;
     const { command, value } = lastMessage;
 
-    if (command === "x") {
-      console.log(command, value);
-    }
     switch (command) {
       case "z": {
+        reset();
         setZoomingDelta(ZOOM_FRAME_DELTA * value);
         break;
       }
@@ -76,12 +79,14 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
       }
 
       case "x": {
+        reset();
         if (Math.abs(value) > MOVEMENT_THRESHOLD)
           setXDelta(value * MOVEMENT_SCALE_FACTOR);
         break;
       }
 
       case "y": {
+        reset();
         if (Math.abs(value) > MOVEMENT_THRESHOLD)
           setYDelta(value * MOVEMENT_SCALE_FACTOR);
         break;

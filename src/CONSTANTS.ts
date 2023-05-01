@@ -17,3 +17,5 @@ export const YEARS_MAX = 2020;
 
 export const MOVEMENT_THRESHOLD = 10;
 export const MOVEMENT_SCALE_FACTOR = 0.1;
+
+export const MESSAGE_TIMEOUT = 3000;
