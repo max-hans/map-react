@@ -2,6 +2,7 @@ export interface Scenario {
   idx: number;
   data: string;
   projects: number;
+  temperature: number;
 }
 
 export interface History {
