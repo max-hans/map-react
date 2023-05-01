@@ -16,13 +16,12 @@ import { CameraControls } from "@react-three/drei";
 import { MAX_ZOOM, MIN_ZOOM } from "../../CONSTANTS";
 import { useEffectOnce } from "react-use";
 import { MathUtils, Mesh, TextureLoader, Vector3 } from "three";
-import { Vec2D } from "@/types/data";
+import { Project, Vec2D } from "@/types/data";
 import { projects, futureProjects } from "@/data";
 import positions from "../../data/raw/random-positions.json";
 import Borders from "./comps/Borders";
 
 import {
-  Bloom,
   DotScreen,
   EffectComposer,
   Noise,
@@ -32,6 +31,7 @@ import {
 import { BlendFunction } from "postprocessing";
 import { addVec } from "./func";
 import ProjectSphere from "./comps/ProjectSphere";
+import ProjectIndicator from "./comps/ProjectIndicator";
 
 const PROJECT_CENTER_OFFSET: Vec2D = { x: 50, y: 50 };
 
@@ -55,6 +55,7 @@ const Scene = () => {
     const w = calcWfromH(h);
     return [w, h];
   });
+  const [cameraTarget, setCameraTarget] = useState(new Vector3());
 
   /* stores */
   const [targetZoomFactor, setTargetZoomFactor, move] = useUiStore((state) => [
@@ -89,7 +90,6 @@ const Scene = () => {
   });
 
   const focusPosition = (position: Vec2D, zoom: number) => {
-    console.log("focus", position);
     setPos(position);
     setTargetZoomFactor(zoom);
   };
@@ -99,12 +99,8 @@ const Scene = () => {
 
     const constrainedPos = getConstrainedPos(pos, targetZoomFactor);
 
-    console.log("constrained", constrainedPos);
-
     let current: Vector3 | undefined = undefined;
     cameraControlsRef.current.getPosition(current!);
-
-    console.log("current", cameraControlsRef.current.camera.position);
 
     cameraControlsRef.current.moveTo(
       constrainedPos.x,
@@ -145,7 +141,6 @@ const Scene = () => {
         y: pos.y + (move.y || 0),
       };
       const constrained = getConstrainedPos(newPos, targetZoomFactor);
-      console.log("move", constrained);
 
       setPos(constrained);
     }
@@ -173,12 +168,42 @@ const Scene = () => {
 
   useFrame(() => {
     if (!cameraControlsRef.current) return;
+
+    let vec = new Vector3();
+    cameraControlsRef.current.getPosition(vec);
+    vec.z = 0;
+    if (cameraTarget.distanceTo(vec) > 0.0001) {
+      setCameraTarget(vec);
+    }
     const currentScaleFactor = cameraControlsRef.current.camera.zoom;
     const delta = Math.abs(currentScaleFactor - targetZoomFactor);
     if (delta > 0.1) {
       setCurrentZoom(currentScaleFactor);
     }
   });
+
+  const filteredProjects: Project[] = useMemo(() => {
+    if (mode === "FUTURE") return projects;
+    const filtered = projects.filter((e) => e.time < time);
+    return filtered;
+  }, [time, projects, mode]);
+
+  const focussedProject: Project | undefined = useMemo(() => {
+    const sorted = filteredProjects
+      .map((p) => {
+        const mapped = scaleToMeshSize(p.position);
+
+        const pVec = new Vector3(mapped.x, mapped.y, 0);
+        const dist = pVec.distanceTo(cameraTarget);
+        return { project: p, dist };
+        /* if (!closest || dist < closest.dist) {
+        closest = { project: p, dist };
+      } */
+      })
+      .sort((a, b) => a.dist - b.dist);
+
+    return sorted[0]?.project;
+  }, [cameraTarget, filteredProjects]);
 
   const timeFloat = remap(time, 1950, 2020, 0, 1);
 
@@ -229,21 +254,19 @@ const Scene = () => {
           );
         })}
 
-      {projects.map((p, i) => {
+      {filteredProjects.map((p, i) => {
         const projectPos = scaleToMeshSize(p.position);
-
-        if (p.time > time && mode !== "FUTURE") return null;
 
         return (
           <ProjectSphere
             key={`$project-${p.name}`}
             position={projectPos}
             scaleFactor={currentZoom}
-            onSelect={() => {
+            /* onSelect={() => {
               console.log("project", projectPos);
               focusPosition(addVec(projectPos, PROJECT_CENTER_OFFSET), 3);
               onSelect(i % projects.length);
-            }}
+            }} */
             selected={selected === i}
           />
         );
@@ -277,12 +300,26 @@ const Scene = () => {
           thicknessFactor={currentZoom}
         />
       </Suspense>
-      {/* <gridHelper
-        position={[0, 0, 10]}
-        args={[10000, 50 * Math.pow(2, currentZoom / 2), 0xffffff, 0xffffff]}
-        rotation={[MathUtils.DEG2RAD * 90, 0, 0]}
-        renderOrder={1000}
-      /> */}
+
+      {focussedProject && (
+        <ProjectIndicator
+          position={focussedProject.position}
+          positionCb={scaleToMeshSize}
+        />
+      )}
+
+      {/*   <mesh position={cameraTarget}>
+        <sphereBufferGeometry args={[20, 10]} />
+        <meshStandardMaterial color="yellow" />
+      </mesh> */}
+
+      <group renderOrder={500}>
+        <gridHelper
+          position={[0, 0, 10]}
+          args={[10000, 50 * Math.pow(2, 2), 0xcccccc, 0xcccccc]}
+          rotation={[MathUtils.DEG2RAD * 90, 0, 0]}
+        />
+      </group>
       <EffectComposer>
         <Vignette eskil={false} offset={0.1} darkness={0.8} />
         <Pixelation
