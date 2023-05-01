@@ -48,25 +48,23 @@ Beispiel:
 ### Navigation
 
 ```
-Prefix: n
-Werte: 0-3
+Prefix: x / y
+Werte: -100 - 100
 ```
 
-Die Richtung wird auf die Zahlen von 0 bis 3 gemapped:
-
-- Links: 0 -> `n,0`
-- Rechts: 1 -> `n,1`
-- Hoch: 2 -> `n,2`
-- Runter: 3 -> `n,3`
+- Links: -> `x,-100`
+- Rechts: -> `x,100`
+- Hoch: -> `y,-100`
+- Runter: -> `y,100`
 
 ### Zoom
 
 ```
 Prefix: z
-Werte: 0 & 1
+Werte: -100 bis 100
 ```
 
 Beim Hereinzoomen wird Wert 1 geschickt, beim Herauszoome Wert 0
 
-- Hereinzoomen: 1 -> `z,1`
-- Herauszoomen: 0 -> `z,0`
+- Hereinzoomen: 100 -> `z,100`
+- Herauszoomen: -100 -> `z,-100`
