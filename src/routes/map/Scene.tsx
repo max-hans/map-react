@@ -215,7 +215,10 @@ const Scene = () => {
       </mesh>
 
       {positionsIndexed
-        .slice(0, positionsIndexed.length * timeFloat)
+        .slice(
+          0,
+          positionsIndexed.length * (mode === "HISTORY" ? timeFloat : 1)
+        )
         .map((p, i) => {
           const pos = scaleToMeshSize(p);
           return (
