@@ -6,6 +6,7 @@ import {
   MOVEMENT_THRESHOLD,
   MOVEMENT_SCALE_FACTOR,
   MESSAGE_TIMEOUT,
+  ZOOM_THRESHOLD,
 } from "@/CONSTANTS";
 import { scenarios } from "@/data";
 import { remap, constrain } from "@/func/data";
@@ -66,7 +67,9 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
     switch (command) {
       case "z": {
         reset();
-        setZoomingDelta(ZOOM_FRAME_DELTA * value);
+        if (Math.abs(value) > ZOOM_THRESHOLD) {
+          setZoomingDelta(ZOOM_FRAME_DELTA * value);
+        }
         break;
       }
 
@@ -76,7 +79,7 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
           YEARS_MIN,
           YEARS_MAX
         );
-        setTime(year);
+        setTime(Math.floor(year));
         break;
       }
 
@@ -96,12 +99,13 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
 
       case "s": {
         let scenario = constrain(value, 0, scenarios.length - 1);
-        setScenario(scenario);
+        setScenario(Math.floor(scenario));
         break;
       }
 
       case "m": {
-        const mode: DisplayMode = value === 0 ? "HISTORY" : "FUTURE";
+        const floored = Math.floor(value);
+        const mode: DisplayMode = floored === 0 ? "HISTORY" : "FUTURE";
         setMode(mode);
         break;
       }

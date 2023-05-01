@@ -24,7 +24,7 @@ const useSocketIo = ({ topic }: { topic: string }) => {
 
         if (parsed.message) {
           const [command, value] = parsed.message.split(",");
-          const valueParsed = parseInt(value);
+          const valueParsed = parseFloat(value);
           if (!isNaN(valueParsed)) {
             setLastMessage({ command, value: valueParsed });
           }
