@@ -1,12 +1,12 @@
 import {
   YEARS_MIN,
   YEARS_MAX,
-  ZOOM_FRAME_DELTA,
-  ZOOM_INTERVAL,
   MOVEMENT_THRESHOLD,
   MOVEMENT_SCALE_FACTOR,
   MESSAGE_TIMEOUT,
   ZOOM_THRESHOLD,
+  ZOOM_SCALE_FACTOR,
+  CAMERA_UPDATE_INTERVAL,
 } from "@/CONSTANTS";
 import { scenarios } from "@/data";
 import { remap, constrain } from "@/func/data";
@@ -57,7 +57,9 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
         setMove(delta);
       }
     },
-    allDefinedAndNotZero(zoomDelta, xDelta, yDelta) ? ZOOM_INTERVAL : null
+    allDefinedAndNotZero(zoomDelta, xDelta, yDelta)
+      ? CAMERA_UPDATE_INTERVAL
+      : null
   );
 
   useEffect(() => {
@@ -68,17 +70,13 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
       case "z": {
         reset();
         if (Math.abs(value) > ZOOM_THRESHOLD) {
-          setZoomingDelta(ZOOM_FRAME_DELTA * value);
+          setZoomingDelta(value * ZOOM_SCALE_FACTOR);
         }
         break;
       }
 
       case "h": {
-        let year = constrain(
-          remap(value, 0, 1000, YEARS_MIN, YEARS_MAX),
-          YEARS_MIN,
-          YEARS_MAX
-        );
+        let year = remap(value, 0, 1000, YEARS_MIN, YEARS_MAX, true);
         setTime(Math.floor(year));
         break;
       }
