@@ -1,6 +1,7 @@
 import { FC, useRef } from "react";
 import useMainStore from "@/stores/main";
 import { projects } from "@/data";
+import Controller from "@/components/Contoller";
 
 interface ProjectScreenProps {}
 
@@ -16,7 +17,7 @@ const ProjectScreen: FC<ProjectScreenProps> = () => {
       className="fixed w-screen h-screen bg-white flex flex-col justify-center items-center"
       ref={ref}
     >
-      <div className="flex flex-col overflow-hidden items-center space-y-24 w-2/3">
+      <div className="flex flex-col items-center space-y-24 w-2/3">
         {project ? (
           <>
             <h2 className="text-8xl leading-tight font-bold w-full">
