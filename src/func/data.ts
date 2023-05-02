@@ -29,3 +29,11 @@ export function shuffleArray<T>(arr: T[]) {
 
 export const constrain = (val: number, min: number, max: number) =>
   Math.min(max, Math.max(val, min));
+
+export const withinBounds = (
+  val: number,
+  min: number,
+  max: number
+): boolean => {
+  return val >= min && val <= max;
+};

@@ -4,7 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { history } from "../../data/CONSTANTS";
 import VideoMaterial from "./comps/VideoMaterial";
 import useMainStore from "../../stores/main";
-import { constrain, remap } from "../../func/data";
+import { constrain, remap, withinBounds } from "../../func/data";
 
 import useUiStore from "../../stores/ui";
 
@@ -173,6 +173,7 @@ const Scene = () => {
     cameraControlsRef.current.getPosition(vec);
     vec.z = 0;
     if (cameraTarget.distanceTo(vec) > 0.0001) {
+      console.log("t", cameraTarget);
       setCameraTarget(vec);
     }
     const currentScaleFactor = cameraControlsRef.current.camera.zoom;
@@ -196,13 +197,31 @@ const Scene = () => {
         const pVec = new Vector3(mapped.x, mapped.y, 0);
         const dist = pVec.distanceTo(cameraTarget);
         return { project: p, dist };
-        /* if (!closest || dist < closest.dist) {
-        closest = { project: p, dist };
-      } */
       })
       .sort((a, b) => a.dist - b.dist);
 
-    return sorted[0]?.project;
+    const { width, height } = viewport.getCurrentViewport();
+
+    const closest = sorted[0];
+
+    if (!closest) return;
+
+    const scaledProjectPosition = scaleToMeshSize(closest.project.position);
+
+    console.log(scaledProjectPosition, cameraTarget);
+    const within =
+      withinBounds(
+        scaledProjectPosition.x,
+        cameraTarget.x - width / 2,
+        cameraTarget.x + width / 2
+      ) &&
+      withinBounds(
+        scaledProjectPosition.y,
+        cameraTarget.y - height / 2,
+        cameraTarget.y + height / 2
+      );
+
+    return within ? closest.project : undefined;
   }, [cameraTarget, filteredProjects]);
 
   const timeFloat = remap(time, 1950, 2020, 0, 1);
@@ -262,12 +281,7 @@ const Scene = () => {
             key={`$project-${p.name}`}
             position={projectPos}
             scaleFactor={currentZoom}
-            /* onSelect={() => {
-              console.log("project", projectPos);
-              focusPosition(addVec(projectPos, PROJECT_CENTER_OFFSET), 3);
-              onSelect(i % projects.length);
-            }} */
-            selected={selected === i}
+            selected={p === focussedProject}
           />
         );
       })}
@@ -288,7 +302,7 @@ const Scene = () => {
                 focusPosition(addVec(projectPos, PROJECT_CENTER_OFFSET), 3);
                 onSelect(i % projects.length);
               }}
-              selected={selected === i}
+              selected={p === focussedProject}
             />
           );
         })}
@@ -305,13 +319,9 @@ const Scene = () => {
         <ProjectIndicator
           position={focussedProject.position}
           positionCb={scaleToMeshSize}
+          cursorPosition={cameraTarget}
         />
       )}
-
-      {/*   <mesh position={cameraTarget}>
-        <sphereBufferGeometry args={[20, 10]} />
-        <meshStandardMaterial color="yellow" />
-      </mesh> */}
 
       <group renderOrder={500}>
         <gridHelper
@@ -320,6 +330,7 @@ const Scene = () => {
           rotation={[MathUtils.DEG2RAD * 90, 0, 0]}
         />
       </group>
+
       <EffectComposer>
         <Vignette eskil={false} offset={0.1} darkness={0.8} />
         <Pixelation

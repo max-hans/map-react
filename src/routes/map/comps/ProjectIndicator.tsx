@@ -7,48 +7,53 @@ import { subVec } from "../func";
 
 interface ProjectIndicatorProps {
   position: Vec2D;
+  cursorPosition: Vec2D;
   positionCb?: (v: Vec2D) => Vec2D;
 }
 
-const INDICATOR_OFFSET = 0.03;
+const INDICATOR_OFFSET = 50;
 
 const ProjectIndicator: FC<ProjectIndicatorProps> = ({
   position,
+  cursorPosition,
   positionCb = (v) => v,
 }) => {
   const line: Shape | null = useMemo(() => {
     if (!position) return null;
 
-    const len = remap(
-      Math.random(),
-      -1,
-      1,
-      -INDICATOR_OFFSET,
-      INDICATOR_OFFSET
-    );
-    const indicator = subVec(position, {
-      x: len,
-      y: -Math.abs(len),
-    });
+    const target = positionCb(position);
 
+    const newCursorPosition = {
+      ...cursorPosition,
+      y: cursorPosition.y - INDICATOR_OFFSET,
+    };
+
+    const delta = Math.abs(newCursorPosition.x - target.x);
+
+    const indicatorPoint = {
+      x: newCursorPosition.x,
+      y: target.y - delta,
+    };
+
+    console.log(newCursorPosition);
     const positions = [
-      position,
-      indicator,
+      target,
+      indicatorPoint,
       {
-        x: indicator.x,
-        y: 1,
+        x: newCursorPosition.x,
+        y: -10000,
       },
     ];
 
+    console.log(positions);
+
     const points: Vector2[] = positions.map((pos) => {
-      const vec = positionCb(pos);
-      return new Vector2(vec.x, vec.y);
+      return new Vector2(pos.x, pos.y);
     });
 
     const shape = new Shape(points);
     return shape;
-  }, [position]);
-
+  }, [position, cursorPosition]);
   return line ? (
     <group renderOrder={1001} position={[0, 0, 10]}>
       <ShapeView shape={line} color="blue" thickness={0.01} />
