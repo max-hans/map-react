@@ -16,8 +16,8 @@ import { CameraControls } from "@react-three/drei";
 import { MAX_ZOOM, MIN_ZOOM } from "../../CONSTANTS";
 import { useEffectOnce } from "react-use";
 import { MathUtils, Mesh, TextureLoader, Vector3 } from "three";
-import { Project, Vec2D } from "@/types/data";
-import { projects, futureProjects } from "@/data";
+import { Project, SimpleProject, Vec2D } from "@/types/data";
+import { projects, futureProjects, simpleProjects } from "@/data";
 import positions from "../../data/raw/random-positions.json";
 import Borders from "./comps/Borders";
 
@@ -189,6 +189,10 @@ const Scene = () => {
     return filtered;
   }, [time, projects, mode]);
 
+  const filteredPositions: SimpleProject[] = useMemo(() => {
+    return simpleProjects.filter((elem) => elem.time <= time);
+  }, [time, simpleProjects]);
+
   const focussedProject: Project | undefined = useMemo(() => {
     const sorted = filteredProjects
       .map((p) => {
@@ -208,7 +212,6 @@ const Scene = () => {
 
     const scaledProjectPosition = scaleToMeshSize(closest.project.position);
 
-    console.log(scaledProjectPosition, cameraTarget);
     const within =
       withinBounds(
         scaledProjectPosition.x,
@@ -258,20 +261,15 @@ const Scene = () => {
         )}
       </mesh>
 
-      {positionsIndexed
-        .slice(
-          0,
-          positionsIndexed.length * (mode === "HISTORY" ? timeFloat : 1)
-        )
-        .map((p, i) => {
-          const pos = scaleToMeshSize(p);
-          return (
-            <mesh position={[pos.x, pos.y, 0]} key={`$position-${p.id}`}>
-              <sphereGeometry args={[2 / targetZoomFactor, 16]} />
-              <meshBasicMaterial color="white" />
-            </mesh>
-          );
-        })}
+      {filteredPositions.map((p, i) => {
+        const pos = scaleToMeshSize(p.position);
+        return (
+          <mesh position={[pos.x, pos.y, 0]} key={`$position-${p.id}`}>
+            <sphereGeometry args={[2 / targetZoomFactor, 16]} />
+            <meshBasicMaterial color="white" />
+          </mesh>
+        );
+      })}
 
       {filteredProjects.map((p, i) => {
         const projectPos = scaleToMeshSize(p.position);
@@ -325,7 +323,7 @@ const Scene = () => {
 
       <group renderOrder={500}>
         <gridHelper
-          position={[0, 0, 10]}
+          position={[0, 0, 1]}
           args={[10000, 50 * Math.pow(2, 2), 0xcccccc, 0xcccccc]}
           rotation={[MathUtils.DEG2RAD * 90, 0, 0]}
         />

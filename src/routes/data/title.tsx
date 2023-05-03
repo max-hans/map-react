@@ -34,14 +34,16 @@ const Title: FunctionComponent<TitleProps> = () => {
 
   return (
     <div className="fixed w-screen h-screen bg-white flex flex-col justify-center items-center">
-      <div className="flex flex-col space-y-32 items-center relative">
-        <h2 className="text-4xl w-full text-center">
+      <div className="flex flex-col space-y-8 items-center relative">
+        <h2 className="text-4xl w-full text-center leading-tight">
           {mode === "FUTURE"
             ? `projection [ ${currentScenario.name} ]`
             : "historic data"}
         </h2>
-        <h2 className="text-[200px] w-full">{formatTemp(temperature, 2)} °C</h2>
-        <h2 className="absolute top-[100%] text-4xl">year {year}</h2>
+        <h2 className="text-[200px] leading-tight w-full">
+          {formatTemp(temperature, 2)} °C
+        </h2>
+        <h2 className="text-4xl leading-tight">year {year}</h2>
       </div>
     </div>
   );

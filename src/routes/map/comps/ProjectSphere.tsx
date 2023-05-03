@@ -17,12 +17,12 @@ const ProjectSphere: FunctionComponent<ProjectSphereProps> = ({
 }) => {
   return (
     <group>
-      <mesh position={[position.x, position.y, 0]}>
+      <mesh position={[position.x, position.y, 20]}>
         <sphereGeometry args={[(selected ? 15 : 6) / scaleFactor, 16]} />
         <meshBasicMaterial color={selected ? "blue" : "white"} />
       </mesh>
 
-      <mesh position={[position.x, position.y, 0]} onClick={onSelect}>
+      <mesh position={[position.x, position.y, 20]} onClick={onSelect}>
         <sphereGeometry args={[20 / scaleFactor, 2]} />
         <meshBasicMaterial color="red" transparent opacity={0} />
       </mesh>

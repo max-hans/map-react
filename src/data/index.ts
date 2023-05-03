@@ -1,9 +1,13 @@
 import { remap, validateProjectType } from "../func/data";
-import { Project, Scenario } from "../types/data";
+import { Project, Scenario, SimpleProject } from "../types/data";
 
 import projectsRaw from "./raw/projects.csv?raw";
 import futureProjectsRaw from "./raw/future-projects.csv?raw";
+
+import historicProjectsSimple from "./raw/historic_projects_cleaned.csv?raw";
+
 import scenariosRaw from "./raw/scenarios.csv?raw";
+import { nanoid } from "nanoid";
 
 const extractProjectsFromCSV = (input: string): Project[] => {
   const [_, ...data] = input.split("\n").filter((line) => line.length);
@@ -35,9 +39,30 @@ const extractProjectsFromCSV = (input: string): Project[] => {
   return fields;
 };
 
-export const projects: Project[] = extractProjectsFromCSV(projectsRaw);
+export const allProjects: Project[] = extractProjectsFromCSV(
+  historicProjectsSimple
+).sort((a, b) => b.power - a.power);
+
+const PROJECTS_COUNT = 1000;
+const SIMPLE_PROJECTS_COUNT = 5000;
+
+export const projects: Project[] = allProjects.slice(0, PROJECTS_COUNT);
+
 export const futureProjects: Project[] =
   extractProjectsFromCSV(futureProjectsRaw);
+
+const MIN_CAP = 25;
+
+export const simpleProjects: SimpleProject[] = allProjects
+  .slice(PROJECTS_COUNT + 1, PROJECTS_COUNT + SIMPLE_PROJECTS_COUNT)
+  .map((elem) => ({
+    time: elem.time,
+    position: elem.position,
+    id: nanoid(),
+    power: elem.power,
+  }));
+
+console.log(simpleProjects[0], simpleProjects[simpleProjects.length - 1]);
 
 export const scenarios: Scenario[] = (() => {
   const [_, ...data] = scenariosRaw.split("\n").filter((line) => line.length);

@@ -29,15 +29,16 @@ export interface Project {
   power: number;
 }
 
+export interface SimpleProject {
+  position: Vec2D;
+  time: number;
+  id: string;
+}
+
 export type DisplayMode = "HISTORY" | "FUTURE";
 
 export interface History {
   src: string;
   from: number;
   to: number;
-}
-
-interface TimeDef {
-  month: number;
-  year: number;
 }
