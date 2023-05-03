@@ -2,9 +2,7 @@ import { Vec2D } from "@/types/data";
 import { io } from "socket.io-client";
 
 // "undefined" means the URL will be computed from the `window.location` object
-const URL = "http://localhost:3000";
-
-export const socket = io(URL);
+export const socket = io(undefined);
 
 export const directionToVector = (val: number, magnitude: number): Vec2D => {
   switch (val) {
