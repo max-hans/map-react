@@ -32,6 +32,7 @@ import { BlendFunction } from "postprocessing";
 import { addVec } from "./func";
 import ProjectSphere from "./comps/ProjectSphere";
 import ProjectIndicator from "./comps/ProjectIndicator";
+import ProjectSphereInstances from "./comps/ProjectSphereInstance";
 
 const PROJECT_CENTER_OFFSET: Vec2D = { x: 50, y: 50 };
 
@@ -261,15 +262,13 @@ const Scene = () => {
         )}
       </mesh>
 
-      {filteredPositions.map((p, i) => {
-        const pos = scaleToMeshSize(p.position);
-        return (
-          <mesh position={[pos.x, pos.y, 0]} key={`$position-${p.id}`}>
-            <sphereGeometry args={[2 / targetZoomFactor, 16]} />
-            <meshBasicMaterial color="white" />
-          </mesh>
-        );
-      })}
+      <ProjectSphereInstances
+        positions={filteredPositions.map((p, i) => {
+          return scaleToMeshSize(p.position);
+        })}
+        count={filteredProjects.length}
+        scaleFactor={currentZoom}
+      />
 
       {filteredProjects.map((p, i) => {
         const projectPos = scaleToMeshSize(p.position);
