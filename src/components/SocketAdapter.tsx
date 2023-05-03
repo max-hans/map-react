@@ -107,6 +107,11 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
         setMode(mode);
         break;
       }
+
+      case "PING": {
+        /* this is just a ping from the server */
+        break;
+      }
     }
   }, [lastMessage]);
 
