@@ -1,5 +1,6 @@
 export interface Scenario {
   idx: number;
+  name: string;
   data: string;
   projects: number;
   temperature: number;

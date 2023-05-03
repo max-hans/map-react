@@ -1,3 +1,4 @@
+import { Scenario } from "@/types/data";
 import { scenarios } from ".";
 import temps from "./raw/temps.json";
 
@@ -7,4 +8,8 @@ export const getTemperatureForYear = (year: number): number => {
 
 export const getTemperatureForScenario = (scenario: number): number => {
   return scenarios[scenario]?.temperature ?? -1;
+};
+
+export const getScenario = (scenario: number): Scenario => {
+  return scenarios[scenario];
 };

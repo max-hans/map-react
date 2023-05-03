@@ -48,8 +48,9 @@ export const scenarios: Scenario[] = (() => {
         const scenario: Scenario = {
           data: frags[1],
           projects: parseFloat(frags[2]),
+          name: frags[3],
           idx: parseInt(frags[0]),
-          temperature: parseFloat(frags[3]),
+          temperature: parseFloat(frags[4]),
         };
         return scenario;
       } catch (e) {
