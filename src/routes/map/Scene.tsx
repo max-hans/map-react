@@ -18,7 +18,6 @@ import { useEffectOnce } from "react-use";
 import { MathUtils, Mesh, TextureLoader, Vector3 } from "three";
 import { Project, SimpleProject, Vec2D } from "@/types/data";
 import { projects, futureProjects, simpleProjects } from "@/data";
-import positions from "../../data/raw/random-positions.json";
 import Borders from "./comps/Borders";
 
 import {
@@ -146,11 +145,6 @@ const Scene = () => {
       setPos(constrained);
     }
   }, [move]);
-
-  const positionsIndexed = useMemo(
-    () => positions.map((e) => ({ ...e, id: nanoid() })),
-    [positions]
-  );
 
   const scaleToMeshSize = (pos: Vec2D): Vec2D => {
     return {
