@@ -21,6 +21,18 @@ const allDefinedAndNotZero = (...args: Array<number | undefined>) => {
   return args.some((elem) => !!elem);
 };
 
+const parseModeAndYear = (val: number): [DisplayMode, number] => {
+  if (val < 675) {
+    return ["HISTORY", remap(val, 0, 675, 1950, 2010)];
+  }
+
+  if (val < 789) {
+    return ["HISTORY", remap(val, 675, 789, 2010, 2023)];
+  }
+
+  return ["FUTURE", 2100];
+};
+
 const SocketAdapter = ({ topic }: { topic: string }) => {
   const [incrementTargetZoomFactor, setMove] = useUiStore((state) => [
     state.incrementTargetZoomFactor,
@@ -76,8 +88,12 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
       }
 
       case "h": {
-        let year = remap(value, 0, 1000, YEARS_MIN, YEARS_MAX, true);
+        let val = remap(value, 0, 1000, YEARS_MIN, YEARS_MAX, true);
+
+        const [mode, year] = parseModeAndYear(val);
+
         setTime(Math.floor(year));
+        setMode(mode);
         break;
       }
 
