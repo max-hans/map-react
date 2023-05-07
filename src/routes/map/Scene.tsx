@@ -182,8 +182,9 @@ const Scene = () => {
   }, [time, projects, mode]);
 
   const filteredPositions: SimpleProject[] = useMemo(() => {
+    if (mode === "FUTURE") return simpleProjects;
     return simpleProjects.filter((elem) => elem.time <= time);
-  }, [time, simpleProjects]);
+  }, [time, simpleProjects, mode]);
 
   const focussedProject: Project | undefined = useMemo(() => {
     const sorted = filteredProjects
