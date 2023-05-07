@@ -55,7 +55,7 @@ const ProjectIndicator: FC<ProjectIndicatorProps> = ({
     return shape;
   }, [position, cursorPosition]);
   return line ? (
-    <group renderOrder={1001} position={[0, 0, 10]}>
+    <group renderOrder={1001} position={[0, 0, 90]}>
       <ShapeView shape={line} color="blue" thickness={0.01} />
     </group>
   ) : null;
