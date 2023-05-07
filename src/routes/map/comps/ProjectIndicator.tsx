@@ -35,7 +35,6 @@ const ProjectIndicator: FC<ProjectIndicatorProps> = ({
       y: target.y - delta,
     };
 
-    console.log(newCursorPosition);
     const positions = [
       target,
       indicatorPoint,
@@ -44,8 +43,6 @@ const ProjectIndicator: FC<ProjectIndicatorProps> = ({
         y: -10000,
       },
     ];
-
-    console.log(positions);
 
     const points: Vector2[] = positions.map((pos) => {
       return new Vector2(pos.x, pos.y);

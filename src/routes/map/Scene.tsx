@@ -166,7 +166,6 @@ const Scene = () => {
     cameraControlsRef.current.getPosition(vec);
     vec.z = 0;
     if (cameraTarget.distanceTo(vec) > 0.0001) {
-      console.log("t", cameraTarget);
       setCameraTarget(vec);
     }
     const currentScaleFactor = cameraControlsRef.current.camera.zoom;
@@ -287,7 +286,6 @@ const Scene = () => {
               position={projectPos}
               scaleFactor={currentZoom}
               onSelect={() => {
-                console.log("project", projectPos);
                 focusPosition(addVec(projectPos, PROJECT_CENTER_OFFSET), 3);
                 onSelect(i % projects.length);
               }}

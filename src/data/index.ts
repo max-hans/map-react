@@ -35,7 +35,6 @@ const extractProjectsFromCSV = (input: string): Project[] => {
       }
     })
     .filter((elem): elem is Project => elem !== undefined);
-  console.log(fields);
   return fields;
 };
 
@@ -61,8 +60,6 @@ export const simpleProjects: SimpleProject[] = allProjects
     id: nanoid(),
     power: elem.power,
   }));
-
-console.log(simpleProjects[0], simpleProjects[simpleProjects.length - 1]);
 
 export const scenarios: Scenario[] = (() => {
   const [_, ...data] = scenariosRaw.split("\n").filter((line) => line.length);
