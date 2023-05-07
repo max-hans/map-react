@@ -1,10 +1,8 @@
 import { remap, validateProjectType } from "../func/data";
 import { Project, Scenario, SimpleProject } from "../types/data";
 
-import projectsRaw from "./raw/projects.csv?raw";
 import futureProjectsRaw from "./raw/future-projects.csv?raw";
-
-import historicProjectsSimple from "./raw/historic_projects_cleaned.csv?raw";
+import historicProjectsSimple from "./raw/history-projects.csv?raw";
 
 import scenariosRaw from "./raw/scenarios.csv?raw";
 import { nanoid } from "nanoid";
@@ -13,7 +11,7 @@ const extractProjectsFromCSV = (input: string): Project[] => {
   const [_, ...data] = input.split("\n").filter((line) => line.length);
 
   const fields = data
-    .map((line) => {
+    .map((line, i) => {
       const frags = line.split(";").map((elem) => elem.trim());
       try {
         const project: Project = {
@@ -30,8 +28,8 @@ const extractProjectsFromCSV = (input: string): Project[] => {
         };
         return project;
       } catch (e) {
-        console.log(e);
-        throw Error(`malformed data for item: ${frags[0]}`);
+        console.log(`malformed data for item: ${i} ${line}`);
+        throw Error(`malformed data for item: ${line}`);
       }
     })
     .filter((elem): elem is Project => elem !== undefined);
@@ -76,7 +74,7 @@ export const scenarios: Scenario[] = (() => {
         };
         return scenario;
       } catch (e) {
-        throw Error(`malformed data for item: ${frags[0]}`);
+        throw Error(`malformed data for item: ${line.length}`);
       }
     })
     .filter((elem): elem is Scenario => elem !== undefined);
