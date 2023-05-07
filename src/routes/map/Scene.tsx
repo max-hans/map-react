@@ -10,8 +10,6 @@ import useUiStore from "../../stores/ui";
 
 import futures from "./res/futures";
 
-import { nanoid } from "nanoid";
-
 import { CameraControls } from "@react-three/drei";
 import { MAX_ZOOM, MIN_ZOOM } from "../../CONSTANTS";
 import { useEffectOnce } from "react-use";
