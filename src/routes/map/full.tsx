@@ -6,6 +6,7 @@ import Scene from "./Scene";
 import ProjectInspector from "@/components/ProjectInspector";
 import { projects } from "@/data";
 import SocketAdapter from "@/components/SocketAdapter";
+import Legend from "./comps/Legend";
 
 const FullMapView = () => {
   const [selected, setSelected] = useState<number | null>(null);
@@ -25,6 +26,7 @@ const FullMapView = () => {
           <Scene />
         </Canvas>
       </div>
+      <Legend />
     </div>
   );
 };
