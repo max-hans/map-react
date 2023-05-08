@@ -21,10 +21,11 @@ Anmerkung: Anführungszeigen (") nicht mit eingeben, außer es steht explizit da
 3. "`cd `" eingeben (nicht Enter drücken)
 4. Ordner von Desktop "serial-bridge" in PowerShell Fenster ziehen
 5. Enter drücken
-6. "`git stash`" (ggf Enter drücken bis Hinweis weggeht)
-7. "`git pull`"
-8. "`pnpm i`"
-9. Datei "identifiers.json" wieder in Ordner ziehen
+6. "`git add .`"
+7. "`git stash`" (ggf Enter drücken bis Hinweis weggeht)
+8. "`git pull`"
+9. "`pnpm i`"
+10. Datei "identifiers.json" wieder in Ordner ziehen
 
 ## Start
 
