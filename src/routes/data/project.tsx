@@ -29,7 +29,7 @@ const ProjectScreen: FC<ProjectScreenProps> = () => {
       <div className="flex flex-col items-center space-y-24 w-2/3">
         {project ? (
           <>
-            <h2 className="text-8xl leading-tight font-bold w-full">
+            <h2 className="text-7xl leading-tight font-bold w-full line-clamp-3">
               {project.name}
             </h2>
             <div className="flex flex-row w-full justify-between space-x-4">
