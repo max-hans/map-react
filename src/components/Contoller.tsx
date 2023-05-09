@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { MAX_ZOOM, MIN_ZOOM, MOVE_DELTA } from "../CONSTANTS";
+import {
+  MAX_ZOOM,
+  MIN_ZOOM,
+  MOVE_DELTA,
+  YEARS_MAX,
+  YEARS_MIN,
+} from "../CONSTANTS";
 import { projects, scenarios } from "../data";
 import useMainStore from "../stores/main";
 import useUiStore from "../stores/ui";
@@ -72,8 +78,8 @@ const Controller = () => {
         title="time"
         value={time}
         onValue={setTime}
-        min={1950}
-        max={2020}
+        min={YEARS_MIN}
+        max={YEARS_MAX}
       />
       <div className="grid grid-cols-2 gap-2">
         <button
