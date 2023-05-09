@@ -1,4 +1,7 @@
 [
+  { "Mean": 1.24, "Source": "GCAG", "Year": 2023 },
+  { "Mean": 1.11, "Source": "GCAG", "Year": 2022 },
+  { "Mean": 0.88, "Source": "GCAG", "Year": 2021 },
   { "Mean": 1.01, "Source": "GCAG", "Year": 2020 },
   { "Mean": 0.97, "Source": "GCAG", "Year": 2019 },
   { "Mean": 0.86, "Source": "GCAG", "Year": 2018 },
