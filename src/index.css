@@ -1,5 +1,10 @@
 @import "@fontsource/space-grotesk";
 
+@font-face {
+  font-family: "monument";
+  src: url("../public/ABCMonumentGroteskMono-Light.otf");
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
