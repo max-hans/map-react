@@ -23,11 +23,11 @@ const allDefinedAndNotZero = (...args: Array<number | undefined>) => {
 
 const parseModeAndYear = (val: number): [DisplayMode, number] => {
   if (val < 675) {
-    return ["HISTORY", remap(val, 0, 675, 1950, 2010)];
+    return ["HISTORY", Math.floor(remap(val, 0, 675, 1950, 2010))];
   }
 
   if (val < 789) {
-    return ["HISTORY", remap(val, 675, 789, 2010, 2023)];
+    return ["HISTORY", Math.floor(remap(val, 675, 789, 2010, 2023))];
   }
 
   return ["FUTURE", 2100];
@@ -87,11 +87,8 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
         break;
       }
 
-      case "h": {
-        let val = remap(value, 0, 1000, YEARS_MIN, YEARS_MAX, true);
-
-        const [mode, year] = parseModeAndYear(val);
-
+      case "h": { 
+        const [mode, year] = parseModeAndYear(value);
         setTime(Math.floor(year));
         setMode(mode);
         break;
