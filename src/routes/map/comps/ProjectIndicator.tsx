@@ -23,23 +23,30 @@ const ProjectIndicator: FC<ProjectIndicatorProps> = ({
 
     const target = positionCb(position);
 
+    
     const newCursorPosition = {
       ...cursorPosition,
-      y: cursorPosition.y - INDICATOR_OFFSET,
+      y: -10000,
     };
-
+    
+    const indicatorSided = cursorPosition.x > target.x ? -INDICATOR_OFFSET : INDICATOR_OFFSET;
+    
+        
+    
     const delta = Math.abs(newCursorPosition.x - target.x);
 
+
+
     const indicatorPoint = {
-      x: newCursorPosition.x,
-      y: target.y - delta,
+      x: newCursorPosition.x + indicatorSided,
+      y: target.y - delta + INDICATOR_OFFSET,
     };
 
     const positions = [
       target,
       indicatorPoint,
       {
-        x: newCursorPosition.x,
+        x: newCursorPosition.x + indicatorSided,
         y: -10000,
       },
     ];
