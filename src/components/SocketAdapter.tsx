@@ -83,6 +83,8 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
         reset();
         if (Math.abs(value) > ZOOM_THRESHOLD) {
           setZoomingDelta(value * ZOOM_SCALE_FACTOR);
+        } else {
+          setZoomingDelta(0);
         }
         break;
       }
@@ -97,14 +99,19 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
       case "x": {
         reset();
         if (Math.abs(value) > MOVEMENT_THRESHOLD)
-          setXDelta(value * MOVEMENT_SCALE_FACTOR);
+          {setXDelta(value * MOVEMENT_SCALE_FACTOR);
+          
+        } else {
+          setXDelta(0)
+        }
         break;
       }
 
       case "y": {
         reset();
         if (Math.abs(value) > MOVEMENT_THRESHOLD)
-          setYDelta(value * MOVEMENT_SCALE_FACTOR);
+          {setYDelta(value * MOVEMENT_SCALE_FACTOR);}
+          else {setYDelta(0)}
         break;
       }
 
