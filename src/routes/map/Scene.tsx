@@ -10,6 +10,8 @@ import useUiStore from "../../stores/ui";
 
 import futures from "./res/futures";
 
+/* import { scenarios as futures } from "@/data"; */
+
 import { CameraControls } from "@react-three/drei";
 import { MAX_ZOOM, MIN_ZOOM, YEARS_MAX, YEARS_MIN } from "../../CONSTANTS";
 import { useEffectOnce } from "react-use";
