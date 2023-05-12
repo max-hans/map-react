@@ -205,16 +205,17 @@ const Scene = () => {
 
     const scaledProjectPosition = scaleToMeshSize(closest.project.position);
 
+    const VIEWPORT_PADDING = 20;
     const within =
       withinBounds(
         scaledProjectPosition.x,
-        cameraTarget.x - width / 2,
-        cameraTarget.x + width / 2
+        cameraTarget.x - width / 2 + VIEWPORT_PADDING,
+        cameraTarget.x + width / 2 - VIEWPORT_PADDING
       ) &&
       withinBounds(
         scaledProjectPosition.y,
-        cameraTarget.y - height / 2,
-        cameraTarget.y + height / 2
+        cameraTarget.y - height / 2 + VIEWPORT_PADDING,
+        cameraTarget.y + height / 2 - VIEWPORT_PADDING
       );
 
     return within ? closest.project : undefined;
