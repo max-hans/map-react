@@ -18,7 +18,7 @@ export const MOVEMENT_SCALE_FACTOR = 0.1;
 
 export const MESSAGE_TIMEOUT = 3000;
 
-export const MAX_WIND_SPEED = 30;
+export const MAX_WIND_SPEED = 20;
 
 /* just for dev stuff */
 export const MOVE_DELTA = 100;

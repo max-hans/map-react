@@ -40,7 +40,7 @@ const ProjectScreen: FC<ProjectScreenProps> = () => {
             <p className="text-left w-full text-lg">{sources[project.type]}</p>
           </>
         ) : (
-          <h2 className="text-4xl text-gray-500">kein projekt ausgewählt</h2>
+          <h2 className="text-4xl text-gray-500">no project in range</h2>
         )}
       </div>
     </div>
