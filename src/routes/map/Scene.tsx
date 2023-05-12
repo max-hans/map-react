@@ -11,7 +11,7 @@ import useUiStore from "../../stores/ui";
 import futures from "./res/futures";
 
 import { CameraControls } from "@react-three/drei";
-import { MAX_ZOOM, MIN_ZOOM } from "../../CONSTANTS";
+import { MAX_ZOOM, MIN_ZOOM, YEARS_MAX, YEARS_MIN } from "../../CONSTANTS";
 import { useEffectOnce } from "react-use";
 import { MathUtils, Mesh, TextureLoader, Vector3 } from "three";
 import { Project, SimpleProject, Vec2D } from "@/types/data";
@@ -221,7 +221,7 @@ const Scene = () => {
     return within ? closest.project : undefined;
   }, [cameraTarget, filteredProjects]);
 
-  const timeFloat = remap(time, 1950, 2020, 0, 1);
+  const timeFloat = remap(time, YEARS_MIN, YEARS_MAX, 0, 1);
 
   return (
     <>
