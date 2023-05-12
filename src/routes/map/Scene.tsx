@@ -221,7 +221,7 @@ const Scene = () => {
       );
 
     return within ? closest.project : undefined;
-  }, [cameraTarget, filteredProjects]);
+  }, [cameraTarget, filteredProjects, currentZoom]);
 
   const timeFloat = remap(time, YEARS_MIN, YEARS_MAX, 0, 1);
 
