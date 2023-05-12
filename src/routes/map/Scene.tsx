@@ -323,14 +323,14 @@ const Scene = () => {
       <EffectComposer>
         <Vignette eskil={false} offset={0.1} darkness={0.8} />
         <Pixelation
-          granularity={1.5} // pixel granularity
+          granularity={1} // pixel granularity
         />
         {/* <Bloom intensity={0.2} /> */}
-        <Noise opacity={0.05} />
+        <Noise opacity={0.1} />
         <DotScreen
-          blendFunction={BlendFunction.MULTIPLY} // blend mode
+          blendFunction={BlendFunction.SUBTRACT} // blend mode
           angle={Math.PI * 0.2} // angle of the dot pattern
-          scale={10} // scale of the dot pattern
+          scale={5} // scale of the dot pattern
           opacity={0.1}
         />
       </EffectComposer>
