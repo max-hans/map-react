@@ -1,11 +1,6 @@
-import { useState } from "react";
 
-import Frame from "./comps/Frame";
 import { Canvas } from "@react-three/fiber";
 import Scene from "./Scene";
-import ProjectInspector from "@/components/ProjectInspector";
-import { projects } from "@/data";
-import SocketAdapter from "@/components/SocketAdapter";
 import Legend from "./comps/Legend";
 import * as THREE from "three";
 
