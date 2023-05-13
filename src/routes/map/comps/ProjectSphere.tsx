@@ -1,5 +1,4 @@
 import { Vec2D } from "@/types/data";
-import { Html } from "@react-three/drei";
 import { FunctionComponent } from "react";
 
 interface ProjectSphereProps {
@@ -12,14 +11,16 @@ interface ProjectSphereProps {
 const ProjectSphere: FunctionComponent<ProjectSphereProps> = ({
   position,
   scaleFactor,
-  onSelect = () => {},
-  selected,
 }) => {
   return (
     <group>
-      <mesh position={[position.x, position.y, 20]}>
-        <sphereGeometry args={[(selected ? 15 : 6) / scaleFactor, 4]} />
-        <meshBasicMaterial color={selected ? "blue" : "white"} />
+      <mesh position={[position.x, position.y, 30]}>
+        <sphereGeometry args={[15 / scaleFactor, 4]} />
+        <meshBasicMaterial color={"blue"} />
+      </mesh>
+      <mesh position={[position.x, position.y, 40]}>
+        <sphereGeometry args={[6 / scaleFactor, 4]} />
+        <meshBasicMaterial color={"white"} />
       </mesh>
     </group>
   );

@@ -296,13 +296,13 @@ const Scene = () => {
         />
       )}
 
-      {focussedProject && (
+      {/* {focussedProject && (
         <ProjectIndicator
           position={focussedProject.position}
           positionCb={scaleToMeshSize}
           cursorPosition={cameraTarget}
         />
-      )}
+      )} */}
 
       <group renderOrder={500}>
         <gridHelper
