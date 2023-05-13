@@ -54,11 +54,13 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
   /* just in case no new messages for a relative move come in
   -> reset them after certain time */
 
-  const [_isReady, _cancel, reset] = useTimeoutFn(() => {
+  /* const [_isReady, _cancel, reset] = useTimeoutFn(() => {
     setXDelta(0);
     setYDelta(0);
     setZoomingDelta(0);
-  }, MESSAGE_TIMEOUT);
+  }, MESSAGE_TIMEOUT); */
+
+  const reset = () => {};
 
   useInterval(
     () => {
@@ -89,7 +91,7 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
         break;
       }
 
-      case "h": { 
+      case "h": {
         const [mode, year] = parseModeAndYear(value);
         setTime(Math.floor(year));
         setMode(mode);
@@ -98,33 +100,27 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
 
       case "x": {
         reset();
-        if (Math.abs(value) > MOVEMENT_THRESHOLD)
-          {setXDelta(value * MOVEMENT_SCALE_FACTOR);
-          
+        if (Math.abs(value) > MOVEMENT_THRESHOLD) {
+          setXDelta(value * MOVEMENT_SCALE_FACTOR);
         } else {
-          setXDelta(0)
+          setXDelta(0);
         }
         break;
       }
 
       case "y": {
         reset();
-        if (Math.abs(value) > MOVEMENT_THRESHOLD)
-          {setYDelta(value * MOVEMENT_SCALE_FACTOR);}
-          else {setYDelta(0)}
+        if (Math.abs(value) > MOVEMENT_THRESHOLD) {
+          setYDelta(value * MOVEMENT_SCALE_FACTOR);
+        } else {
+          setYDelta(0);
+        }
         break;
       }
 
       case "s": {
         let scenario = constrain(value, 0, scenarios.length - 1);
         setScenario(Math.floor(scenario));
-        break;
-      }
-
-      case "m": {
-        const floored = Math.floor(value);
-        const mode: DisplayMode = floored === 0 ? "HISTORY" : "FUTURE";
-        setMode(mode);
         break;
       }
 
