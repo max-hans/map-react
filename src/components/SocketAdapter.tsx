@@ -38,10 +38,12 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
     state.incrementTargetZoomFactor,
     state.setMove,
   ]);
-  const [setTime, setScenario, setMode] = useMainStore((state) => [
+  const [setTime, time, setScenario, setMode, mode] = useMainStore((state) => [
     state.setTime,
+    state.time,
     state.setScenario,
     state.setMode,
+    state.mode,
   ]);
 
   const { lastMessage } = useSocketIo({ topic });
@@ -92,9 +94,16 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
       }
 
       case "h": {
-        const [mode, year] = parseModeAndYear(value);
-        setTime(Math.floor(year));
-        setMode(mode);
+        const [newMode, year] = parseModeAndYear(value);
+
+        const newTime = Math.floor(year);
+        if (time !== newTime) {
+          setTime(Math.floor(year));
+        }
+
+        if (newMode !== mode) {
+          setMode(newMode);
+        }
         break;
       }
 
