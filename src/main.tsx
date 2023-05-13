@@ -11,6 +11,7 @@ import SocketAdapter from "./components/SocketAdapter";
 import Controller from "./components/Contoller";
 import Mockup from "./routes/map/mockup";
 import FullMapView from "./routes/map/full";
+import LegendScreen from "./routes/data/legendScreen";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/data/project",
     element: <ProjectScreen />,
+  },
+  {
+    path: "/data/legend",
+    element: <LegendScreen />,
   },
 ]);
 

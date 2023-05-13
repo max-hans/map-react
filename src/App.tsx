@@ -6,6 +6,7 @@ export default function Root() {
         <a href="/mockup">mockup</a>
         <a href="/full">full</a>
         <a href="/data/project">project</a>
+        <a href="/data/legend">legend</a>
         <a href="/data/title">title</a>
       </div>
     </div>
