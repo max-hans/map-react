@@ -27,7 +27,7 @@ const ProjectSphere: FunctionComponent<ProjectSphereProps> = ({
         rotation={[0, 0, Math.PI / 4]}
         scale={1 / scaleFactor}
       >
-        <boxGeometry args={[200, 5, 5]} />
+        <boxGeometry args={[300, 8, 8]} />
         <meshBasicMaterial color={"blue"} />
       </mesh>
       <mesh
