@@ -28,4 +28,9 @@ convert './*.jpg' -resize 1920 -remap ../_res/colormap.png -ordered-dither o8x8 
 # with threshold color
 cropped % convert './*.jpg' -resize 1920 -remap pattern:gray30 -ordered-dither o8x8 ../dither_colormap/%03d.jpg
 
+
+
+
+cropped % convert './*.jpg' -remap pattern:gray30 -ordered-dither o8x8 ../dither_colormap/%03d.jpg
+
 ```
