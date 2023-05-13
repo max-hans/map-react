@@ -27,7 +27,7 @@ const ProjectInfo: FC<ProjectInfoProps> = ({}) => {
     <div className="absolute left-0 top-0 m-16 bg-white p-16 space-y-4 w-1/3">
       {project ? (
         <>
-          <h2 className="text-3xl leading-tight font-bold w-full">
+          <h2 className="text-3xl leading-tight font-bold w-full underline decoration-blue-600">
             {project.name}
           </h2>
           <div className="flex flex-col w-full justify-between space-x-4">
