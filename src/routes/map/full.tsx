@@ -14,7 +14,7 @@ const FullMapView = () => {
         <Canvas
           flat
           orthographic
-          dpr={0.5}
+          dpr={0.8}
           className="w-full"
           camera={{ fov: 75, near: 0.01, far: 200, position: [0, 0, 100] }}
           gl={{ toneMapping: THREE.NoToneMapping }}
