@@ -7,6 +7,7 @@ import ProjectInspector from "@/components/ProjectInspector";
 import { projects } from "@/data";
 import SocketAdapter from "@/components/SocketAdapter";
 import Legend from "./comps/Legend";
+import * as THREE from "three";
 
 const FullMapView = () => {
   const [selected, setSelected] = useState<number | null>(null);
@@ -22,6 +23,7 @@ const FullMapView = () => {
           dpr={0.8}
           className="w-full"
           camera={{ fov: 75, near: 0.01, far: 200, position: [0, 0, 100] }}
+          gl={{ toneMapping: THREE.NoToneMapping }}
         >
           <color attach="background" args={["black"]} />
           <Scene />
