@@ -97,13 +97,11 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
         const [newMode, year] = parseModeAndYear(value);
 
         const newTime = Math.floor(year);
-        if (time !== newTime) {
-          setTime(Math.floor(year));
-        }
-
-        if (newMode !== mode) {
+        if (time !== newTime || newMode !== mode) {
+          setTime(newTime);
           setMode(newMode);
         }
+
         break;
       }
 
