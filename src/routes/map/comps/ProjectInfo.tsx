@@ -24,10 +24,10 @@ const ProjectInfo: FC<ProjectInfoProps> = ({}) => {
   const project = selected ? projects[selected] : null;
 
   return (
-    <div className="absolute left-0 top-0 m-16 bg-white p-8 space-y-4 w-128">
+    <div className="absolute left-0 top-0 m-16 bg-white p-16 space-y-4 w-1/3">
       {project ? (
         <>
-          <h2 className="text-3xl leading-tight font-bold w-full line-clamp-3">
+          <h2 className="text-3xl leading-tight font-bold w-full">
             {project.name}
           </h2>
           <div className="flex flex-col w-full justify-between space-x-4">
