@@ -226,6 +226,11 @@ const Scene = () => {
 
   const timeFloat = remap(time, YEARS_MIN, YEARS_MAX, 0, 1);
 
+  const spheresToRender = [
+    ...filteredProjects,
+    ...(mode === "FUTURE" ? futureProjects : []),
+  ];
+
   return (
     <>
       <CameraControls
@@ -266,38 +271,14 @@ const Scene = () => {
         scaleFactor={currentZoom}
       />
 
-      {filteredProjects.map((p, i) => {
-        const projectPos = scaleToMeshSize(p.position);
-
-        return (
-          <ProjectSphere
-            key={`$project-${p.name}`}
-            position={projectPos}
-            scaleFactor={currentZoom}
-            selected={p === focussedProject}
-          />
-        );
-      })}
-
-      {mode === "FUTURE" &&
-        futureProjects.map((p, i) => {
-          const projectPos = scaleToMeshSize(p.position);
-
-          if (p.time > time) return null;
-
-          return (
-            <ProjectSphere
-              key={`$project-${p.name}`}
-              position={projectPos}
-              scaleFactor={currentZoom}
-              onSelect={() => {
-                focusPosition(addVec(projectPos, PROJECT_CENTER_OFFSET), 3);
-                onSelect(i % projects.length);
-              }}
-              selected={p === focussedProject}
-            />
-          );
+      <ProjectSphereInstances
+        positions={spheresToRender.map((p, i) => {
+          return scaleToMeshSize(p.position);
         })}
+        count={spheresToRender.length}
+        scaleFactor={currentZoom}
+        diameter={6}
+      />
 
       <Suspense>
         <Borders
@@ -306,6 +287,14 @@ const Scene = () => {
           thicknessFactor={currentZoom}
         />
       </Suspense>
+
+      {focussedProject && (
+        <ProjectSphere
+          position={scaleToMeshSize(focussedProject.position)}
+          scaleFactor={currentZoom}
+          selected
+        />
+      )}
 
       {focussedProject && (
         <ProjectIndicator

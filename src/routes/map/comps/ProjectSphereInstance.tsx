@@ -7,12 +7,14 @@ interface ProjectSphereInstancesProps {
   temp?: THREE.Object3D;
   positions: Vec2D[];
   scaleFactor: number;
+  diameter?: number;
 }
 
 const ProjectSphereInstances: FC<ProjectSphereInstancesProps> = ({
-  count = 100000,
+  count = 10000,
   temp = new Object3D(),
   positions = [],
+  diameter = 3,
   scaleFactor,
 }) => {
   const ref = useRef<InstancedMesh>(null);
@@ -32,7 +34,7 @@ const ProjectSphereInstances: FC<ProjectSphereInstancesProps> = ({
   }, [positions, scaleFactor]);
   return (
     <instancedMesh ref={ref} args={[undefined, undefined, count]}>
-      <sphereGeometry args={[3, 4]} />
+      <sphereGeometry args={[diameter, 4]} />
       <meshBasicMaterial color="white" />
     </instancedMesh>
   );
