@@ -32,6 +32,7 @@ import { addVec } from "./func";
 import ProjectSphere from "./comps/ProjectSphere";
 import ProjectIndicator from "./comps/ProjectIndicator";
 import ProjectSphereInstances from "./comps/ProjectSphereInstance";
+import MultiTexMaterial from "./comps/MultiTextMaterial";
 
 const PROJECT_CENTER_OFFSET: Vec2D = { x: 50, y: 50 };
 
@@ -253,7 +254,7 @@ const Scene = () => {
         {mode === "HISTORY" ? (
           <VideoMaterial url={`/videos/${history.src}`} position={timeFloat} />
         ) : (
-          <meshBasicMaterial attach="material" map={scenarios[scenarioIndex]} />
+          <MultiTexMaterial textures={scenarios} idx={scenarioIndex} />
         )}
       </mesh>
 
