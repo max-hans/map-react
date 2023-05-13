@@ -154,12 +154,6 @@ const Scene = () => {
     };
   };
 
-  useEffect(() => {
-    if (selected === null) {
-      focusPosition({ x: pos.x, y: 0.5 }, 1);
-    }
-  }, [selected]);
-
   const [currentZoom, setCurrentZoom] = useState<number>(1);
 
   useFrame(() => {
@@ -223,6 +217,11 @@ const Scene = () => {
 
     return within ? closest.project : undefined;
   }, [cameraTarget, filteredProjects, currentZoom]);
+
+  useEffect(() => {
+    const idx = filteredProjects.findIndex((elem) => elem === focussedProject);
+    onSelect(idx !== -1 ? idx : null);
+  }, [focussedProject]);
 
   const timeFloat = remap(time, YEARS_MIN, YEARS_MAX, 0, 1);
 

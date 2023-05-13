@@ -1,16 +1,9 @@
-import { useState } from "react";
-
-import Frame from "./comps/Frame";
 import { Canvas } from "@react-three/fiber";
 import Scene from "./Scene";
-import ProjectInspector from "@/components/ProjectInspector";
-import { projects } from "@/data";
-import SocketAdapter from "@/components/SocketAdapter";
-import Legend from "./comps/Legend";
 import * as THREE from "three";
+import ProjectInfo from "./comps/ProjectInfo";
 
 const FullMapView = () => {
-
   /* https://blog.promaton.com/camera-animations-with-r3f-and-react-spring-6fd378296c46 */
 
   return (
@@ -28,7 +21,7 @@ const FullMapView = () => {
           <Scene />
         </Canvas>
       </div>
-      <Legend />
+      <ProjectInfo />
     </div>
   );
 };

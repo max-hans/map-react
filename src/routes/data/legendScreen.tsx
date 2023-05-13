@@ -1,8 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
-import useMainStore from "@/stores/main";
-import { projects } from "@/data";
-import { ProjectType } from "@/types/data";
-import useSocketIo from "@/hooks/useSocketio";
+import { FC } from "react";
 import { MAX_WIND_SPEED } from "@/CONSTANTS";
 
 interface LegendScreenProps {}
