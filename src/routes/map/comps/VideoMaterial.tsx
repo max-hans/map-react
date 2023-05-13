@@ -62,7 +62,7 @@ const VideoMaterial: FC<VideoMaterialProps> = ({ url, position }) => {
     /* <ditherMaterial map={texture} key={DitherMaterial.key} toneMapped={false}> */
   }
   return video ? (
-    <meshBasicMaterial>
+    <meshBasicMaterial attach="material">
       <videoTexture attach="map" args={[video]} />
     </meshBasicMaterial>
   ) : /* </ditherMaterial> */
