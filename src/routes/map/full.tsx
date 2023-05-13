@@ -10,7 +10,6 @@ import Legend from "./comps/Legend";
 import * as THREE from "three";
 
 const FullMapView = () => {
-  const [selected, setSelected] = useState<number | null>(null);
 
   /* https://blog.promaton.com/camera-animations-with-r3f-and-react-spring-6fd378296c46 */
 
