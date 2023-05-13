@@ -1,7 +1,7 @@
 import { shaderMaterial, useVideoTexture } from "@react-three/drei/web";
 import { extend, Object3DNode } from "@react-three/fiber";
 import { FC, useEffect } from "react";
-import { Texture } from "three";
+import { MeshBasicMaterial, Texture } from "three";
 import { constrain } from "../../../func/data";
 import useVideo from "../../../hooks/useVideo";
 
@@ -19,14 +19,6 @@ declare global {
     }
   }
 }
-
-/* declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      ditherMaterial: ShaderMaterial;
-    }
-  }
-} */
 
 interface VideoMaterialProps {
   url: string;
@@ -66,17 +58,15 @@ const VideoMaterial: FC<VideoMaterialProps> = ({ url, position }) => {
     };
   }, []);
 
-  const texture = useVideoTexture(url, {
-    muted: true,
-    start: true,
-    loop: true,
-  });
-
+  {
+    /* <ditherMaterial map={texture} key={DitherMaterial.key} toneMapped={false}> */
+  }
   return video ? (
-    <ditherMaterial map={texture} key={DitherMaterial.key}>
+    <meshBasicMaterial>
       <videoTexture attach="map" args={[video]} />
-    </ditherMaterial>
-  ) : null;
+    </meshBasicMaterial>
+  ) : /* </ditherMaterial> */
+  null;
 };
 
 export default VideoMaterial;
