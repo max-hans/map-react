@@ -1,6 +1,6 @@
 Index;Data;ProjectCount;Name;Temperature
-0;ssp1_1_9_img_frame_0.jpg;0.1;SSP1-1.9;1.9;1.4
-1;ssp1_2_6_img_frame_0.jpg;0.2;SSP1-2.6;2.6;1.6
-2;ssp2_4_5_img_frame_0.jpg;0.3;SSP2-4.5;4.5;2.8
+0;ssp1_1_9_img_frame_0.jpg;1;SSP1-1.9;1.9;1.4
+1;ssp1_2_6_img_frame_0.jpg;0.8;SSP1-2.6;2.6;1.6
+2;ssp2_4_5_img_frame_0.jpg;0.6;SSP2-4.5;4.5;2.8
 3;ssp3_7_img_frame_0.jpg;0.4;SSP3-7.0;7.0;4.4
-4;ssp5_8_5_img_frame_0.jpg;0.5;SSP5-8.5;8.5;5.8
+4;ssp5_8_5_img_frame_0.jpg;0.25;SSP5-8.5;8.5;5.8
