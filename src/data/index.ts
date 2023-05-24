@@ -70,7 +70,7 @@ export const scenarios: Scenario[] = (() => {
           projects: parseFloat(frags[2]),
           name: frags[3],
           idx: parseInt(frags[0]),
-          temperature: parseFloat(frags[4]),
+          temperature: parseFloat(frags[5]),
         };
         return scenario;
       } catch (e) {
