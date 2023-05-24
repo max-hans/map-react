@@ -7,6 +7,8 @@ import historicProjectsSimple from "./raw/history-projects.csv?raw";
 import scenariosRaw from "./raw/scenarios.csv?raw";
 import { nanoid } from "nanoid";
 
+const extractFloat = (s: string) => parseFloat(s.replaceAll(",", "."));
+
 const extractProjectsFromCSV = (input: string): Project[] => {
   const [_, ...data] = input.split("\n").filter((line) => line.length);
 
@@ -17,13 +19,13 @@ const extractProjectsFromCSV = (input: string): Project[] => {
         const project: Project = {
           name: frags[0],
           position: {
-            x: remap(parseFloat(frags[5]), -180, 180, 0, 1),
-            y: remap(parseFloat(frags[4]), 90, -90, 0, 1),
+            x: remap(extractFloat(frags[5]), -180, 180, 0, 1),
+            y: remap(extractFloat(frags[4]), 90, -90, 0, 1),
           },
           type: validateProjectType(frags[2]),
           time: parseInt(frags[3]),
           imgSrc: frags[6],
-          power: parseFloat(frags[1]),
+          power: extractFloat(frags[1]),
           description: "",
         };
         return project;
@@ -107,10 +109,10 @@ export const scenarios: Scenario[] = (() => {
       try {
         const scenario: Scenario = {
           data: frags[1],
-          projects: parseFloat(frags[2]),
+          projects: extractFloat(frags[2]),
           name: frags[3],
           idx: parseInt(frags[0]),
-          temperature: parseFloat(frags[5]),
+          temperature: extractFloat(frags[5]),
         };
         return scenario;
       } catch (e) {
