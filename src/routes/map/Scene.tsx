@@ -10,14 +10,14 @@ import useUiStore from "../../stores/ui";
 
 import futures from "./res/futures";
 
-/* import { scenarios as futures } from "@/data"; */
+import { scenarios as scenarioInfo } from "@/data";
 
 import { CameraControls } from "@react-three/drei";
 import { MAX_ZOOM, MIN_ZOOM, YEARS_MAX, YEARS_MIN } from "../../CONSTANTS";
 import { useEffectOnce } from "react-use";
 import { MathUtils, Mesh, TextureLoader, Vector3 } from "three";
 import { Project, SimpleProject, Vec2D } from "@/types/data";
-import { projects, futureProjects, simpleProjects } from "@/data";
+import { projects, shuffledFutureProjects, simpleProjects } from "@/data";
 import Borders from "./comps/Borders";
 
 import {
@@ -173,10 +173,25 @@ const Scene = () => {
   });
 
   const filteredProjects: Project[] = useMemo(() => {
-    if (mode === "FUTURE") return projects;
-    const filtered = projects.filter((e) => e.time < time);
+    if (mode === "FUTURE") {
+      return projects;
+    }
+    const filtered = projects.filter((e) => e.time <= time);
     return filtered;
   }, [time, projects, mode]);
+
+  const allProjectsWithInfo = useMemo(() => {
+    if (mode === "FUTURE") {
+      const count =
+        scenarioInfo[scenarioIndex].projects * shuffledFutureProjects.length;
+      console.log(count);
+      const part = shuffledFutureProjects.slice(0, count);
+
+      return [...projects, ...part];
+    }
+    const filtered = projects.filter((e) => e.time <= time);
+    return filtered;
+  }, [projects, shuffledFutureProjects, time, scenarios, scenarioIndex, mode]);
 
   const filteredPositions: SimpleProject[] = useMemo(() => {
     if (mode === "FUTURE") return simpleProjects;
@@ -225,11 +240,6 @@ const Scene = () => {
 
   const timeFloat = remap(time, YEARS_MIN, YEARS_MAX, 0, 1);
 
-  const spheresToRender = [
-    ...filteredProjects,
-    ...(mode === "FUTURE" ? futureProjects : []),
-  ];
-
   return (
     <>
       <CameraControls
@@ -271,10 +281,10 @@ const Scene = () => {
       />
 
       <ProjectSphereInstances
-        positions={spheresToRender.map((p, i) => {
+        positions={allProjectsWithInfo.map((p, i) => {
           return scaleToMeshSize(p.position);
         })}
-        count={spheresToRender.length}
+        count={allProjectsWithInfo.length}
         scaleFactor={currentZoom}
         diameter={6}
       />

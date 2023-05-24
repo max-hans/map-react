@@ -22,3 +22,5 @@ export const MAX_WIND_SPEED = 20;
 
 /* just for dev stuff */
 export const MOVE_DELTA = 100;
+
+export const TIME_TODAY = 2023;
