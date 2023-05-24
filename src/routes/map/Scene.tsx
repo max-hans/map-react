@@ -28,11 +28,10 @@ import {
   Vignette,
 } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
-import { addVec } from "./func";
 import ProjectSphere from "./comps/ProjectSphere";
-import ProjectIndicator from "./comps/ProjectIndicator";
 import ProjectSphereInstances from "./comps/ProjectSphereInstance";
 import MultiTexMaterial from "./comps/MultiTextMaterial";
+import useInfoStore from "@/stores/info";
 
 const PROJECT_CENTER_OFFSET: Vec2D = { x: 50, y: 50 };
 
@@ -65,15 +64,14 @@ const Scene = () => {
     state.move,
   ]);
 
-  const [onSelect, selected, time, scenarioIndex, mode] = useMainStore(
-    (state) => [
-      state.onSelect,
-      state.selected,
-      state.time,
-      state.scenario,
-      state.mode,
-    ]
-  );
+  const [onSelect, time, scenarioIndex, mode] = useMainStore((state) => [
+    state.onSelect,
+    state.time,
+    state.scenario,
+    state.mode,
+  ]);
+
+  const setSelectedProject = useInfoStore((state) => state.setSelectedProject);
 
   /* loaders */
 
@@ -89,11 +87,6 @@ const Scene = () => {
       height: viewport.height,
     };
   });
-
-  const focusPosition = (position: Vec2D, zoom: number) => {
-    setPos(position);
-    setTargetZoomFactor(zoom);
-  };
 
   useEffect(() => {
     if (!cameraControlsRef.current) return;
@@ -239,6 +232,10 @@ const Scene = () => {
   }, [focussedProject]);
 
   const timeFloat = remap(time, YEARS_MIN, YEARS_MAX, 0, 1);
+
+  useEffect(() => {
+    setSelectedProject(focussedProject ?? null);
+  }, [focussedProject]);
 
   return (
     <>

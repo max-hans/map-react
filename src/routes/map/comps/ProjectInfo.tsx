@@ -1,5 +1,4 @@
-import { projects } from "@/data";
-import useMainStore from "@/stores/main";
+import useInfoStore from "@/stores/info";
 import { ProjectType } from "@/types/data";
 import { FC, useRef } from "react";
 
@@ -15,27 +14,29 @@ const sources: Record<ProjectType, string> = {
 };
 
 const ProjectInfo: FC<ProjectInfoProps> = ({}) => {
-  const [selected] = useMainStore((state) => [state.selected]);
+  const selectedProject = useInfoStore((state) => state.selectedProject);
 
   const ref = useRef<HTMLDivElement>(null);
 
-  console.log(selected);
-
-  const project = selected ? projects[selected] : null;
+  /*   const project = selected ? projects[selected] : null; */
 
   return (
     <div className="absolute left-0 top-0 m-16 bg-white p-16 space-y-4 w-1/3">
-      {project ? (
+      {selectedProject ? (
         <>
           <h2 className="text-3xl leading-tight font-bold w-full underline decoration-blue-600">
-            {project.name}
+            {selectedProject.name}
           </h2>
           <div className="flex flex-col w-full justify-between space-x-4">
-            <p className="text-xl leading-loose">* {project.time}</p>
-            <p className="text-xl leading-loose">{project.power} megawatt</p>
-            <p className="text-xl leading-loose">{project.type}</p>
+            <p className="text-xl leading-loose">* {selectedProject.time}</p>
+            <p className="text-xl leading-loose">
+              {selectedProject.power} megawatt
+            </p>
+            <p className="text-xl leading-loose">{selectedProject.type}</p>
           </div>
-          <p className="text-left w-full text-md">{sources[project.type]}</p>
+          <p className="text-left w-full text-md">
+            {sources[selectedProject.type]}
+          </p>
         </>
       ) : (
         <h2 className="text-2xl text-gray-500">no project in range</h2>
