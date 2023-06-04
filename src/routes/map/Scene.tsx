@@ -192,7 +192,7 @@ const Scene = () => {
   }, [time, simpleProjects, mode]);
 
   const focussedProject: Project | undefined = useMemo(() => {
-    const sorted = filteredProjects
+    const sorted = allProjectsWithInfo
       .map((p) => {
         const mapped = scaleToMeshSize(p.position);
 
