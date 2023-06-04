@@ -21,10 +21,12 @@ export const validateProjectType = (t: string) => {
   }
 };
 
+export const shuffleCb = () => {
+  return Math.random() - 0.5;
+};
+
 export function shuffleArray<T>(arr: T[]) {
-  return arr.sort(function () {
-    return Math.random() - 0.5;
-  });
+  return arr.sort(shuffleCb);
 }
 
 export const constrain = (val: number, min: number, max: number) =>
