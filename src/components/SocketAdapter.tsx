@@ -1,12 +1,10 @@
 import {
-  YEARS_MIN,
-  YEARS_MAX,
   MOVEMENT_THRESHOLD,
   MOVEMENT_SCALE_FACTOR,
-  MESSAGE_TIMEOUT,
   ZOOM_THRESHOLD,
   ZOOM_SCALE_FACTOR,
   CAMERA_UPDATE_INTERVAL,
+  MESSAGE_TIMEOUT,
 } from "@/CONSTANTS";
 import { scenarios } from "@/data";
 import { remap, constrain } from "@/func/data";
@@ -56,13 +54,10 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
   /* just in case no new messages for a relative move come in
   -> reset them after certain time */
 
-  /* const [_isReady, _cancel, reset] = useTimeoutFn(() => {
+  const [_isReady, _cancel, reset] = useTimeoutFn(() => {
     setXDelta(0);
     setYDelta(0);
-    setZoomingDelta(0);
-  }, MESSAGE_TIMEOUT); */
-
-  const reset = () => {};
+  }, MESSAGE_TIMEOUT);
 
   useInterval(
     () => {
@@ -109,6 +104,7 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
         reset();
         if (Math.abs(value) > MOVEMENT_THRESHOLD) {
           setXDelta(value * MOVEMENT_SCALE_FACTOR);
+          reset();
         } else {
           setXDelta(0);
         }
@@ -119,6 +115,7 @@ const SocketAdapter = ({ topic }: { topic: string }) => {
         reset();
         if (Math.abs(value) > MOVEMENT_THRESHOLD) {
           setYDelta(value * MOVEMENT_SCALE_FACTOR);
+          reset();
         } else {
           setYDelta(0);
         }
