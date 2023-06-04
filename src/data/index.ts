@@ -7,6 +7,8 @@ import historicProjectsSimple from "./raw/history-projects.csv?raw";
 import scenariosRaw from "./raw/scenarios.csv?raw";
 import { nanoid } from "nanoid";
 
+const MAX_NUM_PER_TYPE = 500;
+
 const extractFloat = (s: string) => parseFloat(s.replaceAll(",", "."));
 
 const extractProjectsFromCSV = (input: string): Project[] => {
@@ -45,7 +47,7 @@ export const allProjects: Project[] = extractProjectsFromCSV(
 const PROJECTS_COUNT = 1000;
 const SIMPLE_PROJECTS_COUNT = 5000;
 
-const extractDisplayProjects = (p: Project[]) => {
+const extractDisplayProjects2 = (p: Project[]) => {
   const totalCount = p.length;
 
   const byType = p.reduce((acc, elem) => {
@@ -82,7 +84,50 @@ const extractDisplayProjects = (p: Project[]) => {
       .flat(),
   ];
 
-  return p;
+  return projects;
+};
+
+const extractDisplayProjects = (p: Project[]) => {
+  const totalCount = p.length;
+
+  const byType = p.reduce((acc, elem) => {
+    const type = elem.type;
+    if (!acc[type]) {
+      acc[type] = [elem];
+    } else {
+      acc[type].push(elem);
+    }
+    return acc;
+  }, {} as Record<ProjectType, Project[]>);
+
+  const lengths: Partial<
+    Record<ProjectType, { total: number; normalized: number }>
+  > = {};
+
+  const keys = Object.keys(byType) as ProjectType[];
+
+  keys.forEach((elem) => {
+    const len = byType[elem].length;
+    lengths[elem] = {
+      total: len,
+      normalized: Math.floor((len / totalCount) * PROJECTS_COUNT),
+    };
+  });
+
+  const projects: Project[] = [
+    ...keys
+      .map((key) => {
+        const targetCount = Math.min(
+          lengths[key]?.total ?? Infinity,
+          MAX_NUM_PER_TYPE
+        );
+        const ps = byType[key].slice(0, targetCount);
+        return ps;
+      })
+      .flat(),
+  ];
+
+  return projects;
 };
 
 export const projects: Project[] = extractDisplayProjects(allProjects);
