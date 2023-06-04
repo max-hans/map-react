@@ -28,7 +28,10 @@ const ProjectInfo: FC<ProjectInfoProps> = ({}) => {
             {selectedProject.name}
           </h2>
           <div className="flex flex-col w-full justify-between space-x-4">
-            <p className="text-xl leading-loose">* {selectedProject.time}</p>
+            <p className="text-xl leading-loose">
+              *{" "}
+              {selectedProject.time === 2100 ? "future" : selectedProject.time}
+            </p>
             <p className="text-xl leading-loose">
               {selectedProject.power} megawatt
             </p>
