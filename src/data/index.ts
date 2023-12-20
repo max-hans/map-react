@@ -1,13 +1,12 @@
 import { remap, shuffleArray, validateProjectType } from "../func/data";
-import { Project, ProjectType, Scenario, SimpleProject } from "../types/data";
+import { Project, Scenario, SimpleProject } from "../types/data";
 
 import futureProjectsRaw from "./raw/future-projects.csv?raw";
-import historicProjectsSimple from "./raw/history-projects.csv?raw";
+import historicProjectsRaw from "./raw/history-projects.csv?raw";
+import historicProjectsSimpleRaw from "./raw/history-projects.csv?raw";
 
 import scenariosRaw from "./raw/scenarios.csv?raw";
 import { nanoid } from "nanoid";
-
-const MAX_NUM_PER_TYPE = 500;
 
 const extractFloat = (s: string) => parseFloat(s.replaceAll(",", "."));
 
@@ -40,116 +39,28 @@ const extractProjectsFromCSV = (input: string): Project[] => {
   return fields;
 };
 
-export const allProjects: Project[] = extractProjectsFromCSV(
-  historicProjectsSimple
-).sort((a, b) => b.power - a.power);
+export const projects: Project[] = extractProjectsFromCSV(historicProjectsRaw);
 
-const PROJECTS_COUNT = 1000;
-const SIMPLE_PROJECTS_COUNT = 5000;
-
-const extractDisplayProjects2 = (p: Project[]) => {
-  const totalCount = p.length;
-
-  const byType = p.reduce((acc, elem) => {
-    const type = elem.type;
-    if (!acc[type]) {
-      acc[type] = [elem];
-    } else {
-      acc[type].push(elem);
-    }
-    return acc;
-  }, {} as Record<ProjectType, Project[]>);
-
-  const lengths: Partial<
-    Record<ProjectType, { total: number; normalized: number }>
-  > = {};
-
-  const keys = Object.keys(byType) as ProjectType[];
-
-  keys.forEach((elem) => {
-    const len = byType[elem].length;
-    lengths[elem] = {
-      total: len,
-      normalized: Math.floor((len / totalCount) * PROJECTS_COUNT),
-    };
-  });
-
-  const projects: Project[] = [
-    ...keys
-      .map((key) => {
-        const targetCount = lengths[key]?.normalized ?? 0;
-        const ps = byType[key].slice(0, targetCount);
-        return ps;
-      })
-      .flat(),
-  ];
-
-  return projects;
-};
-
-const extractDisplayProjects = (p: Project[]) => {
-  const totalCount = p.length;
-
-  const byType = p.reduce((acc, elem) => {
-    const type = elem.type;
-    if (!acc[type]) {
-      acc[type] = [elem];
-    } else {
-      acc[type].push(elem);
-    }
-    return acc;
-  }, {} as Record<ProjectType, Project[]>);
-
-  const lengths: Partial<
-    Record<ProjectType, { total: number; normalized: number }>
-  > = {};
-
-  const keys = Object.keys(byType) as ProjectType[];
-
-  keys.forEach((elem) => {
-    const len = byType[elem].length;
-    lengths[elem] = {
-      total: len,
-      normalized: Math.floor((len / totalCount) * PROJECTS_COUNT),
-    };
-  });
-
-  const projects: Project[] = [
-    ...keys
-      .map((key) => {
-        const targetCount = Math.min(
-          lengths[key]?.total ?? Infinity,
-          MAX_NUM_PER_TYPE
-        );
-        const ps = byType[key].slice(0, targetCount);
-        return ps;
-      })
-      .flat(),
-  ];
-
-  return projects;
-};
-
-export const projects: Project[] = extractDisplayProjects(allProjects);
+export const simpleProjects: SimpleProject[] = extractProjectsFromCSV(
+  historicProjectsSimpleRaw
+).map((elem) => ({
+  time: elem.time,
+  position: elem.position,
+  id: nanoid(),
+  power: elem.power,
+}));
 
 export const futureProjects: Project[] =
   extractProjectsFromCSV(futureProjectsRaw);
 
 export const shuffledFutureProjects = shuffleArray(futureProjects);
 
-export const simpleProjects: SimpleProject[] = allProjects
-  .slice(PROJECTS_COUNT + 1, PROJECTS_COUNT + SIMPLE_PROJECTS_COUNT)
-  .map((elem) => ({
-    time: elem.time,
-    position: elem.position,
-    id: nanoid(),
-    power: elem.power,
-  }));
-
 export const scenarios: Scenario[] = (() => {
-  const [_, ...data] = scenariosRaw.split("\n").filter((line) => line.length);
+  const [_, ...data] = scenariosRaw
+    .split("\n")
+    .filter((line: string) => line.length);
   const fields = data
-    .map((line) => {
+    .map((line: string) => {
       const frags = line.split(";").map((elem) => elem.trim());
       try {
         const scenario: Scenario = {
