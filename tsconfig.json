@@ -20,6 +20,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "d.ts", "public/videos/futures"],
+  "include": ["src", "d.ts", "public/videos/futures", "src/**/*"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

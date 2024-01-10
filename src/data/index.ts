@@ -1,11 +1,10 @@
 import { remap, shuffleArray, validateProjectType } from "../func/data";
 import { Project, Scenario, SimpleProject } from "../types/data";
 
-import futureProjectsRaw from "./raw/future-projects.csv?raw";
-import historicProjectsRaw from "./raw/history-projects.csv?raw";
-import historicProjectsSimpleRaw from "./raw/history-projects.csv?raw";
+import futureProjectsRaw from "../../raw/future-projects.csv?raw";
+import historicProjectsRaw from "../../raw/history-projects.csv?raw";
 
-import scenariosRaw from "./raw/scenarios.csv?raw";
+import scenariosRaw from "../../raw/scenarios.csv?raw";
 import { nanoid } from "nanoid";
 
 const extractFloat = (s: string) => parseFloat(s.replaceAll(",", "."));
@@ -13,9 +12,12 @@ const extractFloat = (s: string) => parseFloat(s.replaceAll(",", "."));
 const extractProjectsFromCSV = (input: string): Project[] => {
   const [_, ...data] = input.split("\n").filter((line) => line.length);
 
-  const fields = data
-    .map((line, i) => {
-      const frags = line.split(";").map((elem) => elem.trim());
+  const fields = data.reduce<{
+    success: Project[];
+    failed: { content: string; lineNum: number }[];
+  }>(
+    (acc, line, i) => {
+      const frags = line.split(",").map((elem) => elem.trim());
       try {
         const project: Project = {
           name: frags[0],
@@ -26,25 +28,31 @@ const extractProjectsFromCSV = (input: string): Project[] => {
           type: validateProjectType(frags[2]),
           time: parseInt(frags[3]),
           imgSrc: frags[6],
-          power: extractFloat(frags[1]),
+          power: parseFloat(frags[1]),
           description: "",
         };
-
-        return project;
+        /* return project; */
+        return { ...acc, success: [...acc.success, project] };
       } catch (e) {
-        console.log(`malformed data for item: ${i} ${line}`);
-        throw Error(`malformed data for item: ${line}`);
+        return {
+          ...acc,
+          failed: [...acc.failed, { content: line, lineNum: i + 1 }],
+        };
       }
-    })
-    .filter((elem): elem is Project => elem !== undefined);
+    },
+    { success: [], failed: [] }
+  );
+  console.log("items failed:", fields.failed);
 
-  return fields;
+  fields.success.forEach((elem) => console.log(elem.time));
+
+  return fields.success;
 };
 
 export const projects: Project[] = extractProjectsFromCSV(historicProjectsRaw);
 
 export const simpleProjects: SimpleProject[] = extractProjectsFromCSV(
-  historicProjectsSimpleRaw
+  historicProjectsRaw
 ).map((elem) => ({
   time: elem.time,
   position: elem.position,

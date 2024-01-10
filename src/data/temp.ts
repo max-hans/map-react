@@ -1,6 +1,6 @@
 import { Scenario } from "@/types/data";
 import { scenarios } from ".";
-import temps from "./raw/temps.json";
+import temps from "../../raw/temps.json";
 
 export const getTemperatureForYear = (year: number): number => {
   return temps.find((elem) => elem.Year === Math.floor(year))?.Mean ?? 0;
