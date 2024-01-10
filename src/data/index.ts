@@ -3,6 +3,7 @@ import { Project, Scenario, SimpleProject } from "../types/data";
 
 import futureProjectsRaw from "../../raw/future-projects.csv?raw";
 import historicProjectsRaw from "../../raw/history-projects.csv?raw";
+import historicProjectsSimple from "../../raw/history-projects-simple.csv?raw";
 
 import scenariosRaw from "../../raw/scenarios.csv?raw";
 import { nanoid } from "nanoid";
@@ -52,7 +53,7 @@ const extractProjectsFromCSV = (input: string): Project[] => {
 export const projects: Project[] = extractProjectsFromCSV(historicProjectsRaw);
 
 export const simpleProjects: SimpleProject[] = extractProjectsFromCSV(
-  historicProjectsRaw
+  historicProjectsSimple
 ).map((elem) => ({
   time: elem.time,
   position: elem.position,
@@ -67,9 +68,9 @@ const noYearLength = (arr: Array<SimpleProject | Project>) => {
   return arr.filter((elem) => isNaN(elem.time));
 };
 
-console.log("noYearFuture", noYearLength(futureProjects));
-console.log("noYearHistory", noYearLength(projects));
-console.log("noYearSimple", noYearLength(simpleProjects));
+console.log("Future", futureProjects.length);
+console.log("History", projects.length);
+console.log("HistorySimple", simpleProjects.length);
 
 export const shuffledFutureProjects = shuffleArray(futureProjects);
 
