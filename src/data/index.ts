@@ -29,6 +29,7 @@ const extractProjectsFromCSV = (input: string): Project[] => {
           power: extractFloat(frags[1]),
           description: "",
         };
+
         return project;
       } catch (e) {
         console.log(`malformed data for item: ${i} ${line}`);
@@ -36,6 +37,7 @@ const extractProjectsFromCSV = (input: string): Project[] => {
       }
     })
     .filter((elem): elem is Project => elem !== undefined);
+
   return fields;
 };
 
@@ -52,6 +54,14 @@ export const simpleProjects: SimpleProject[] = extractProjectsFromCSV(
 
 export const futureProjects: Project[] =
   extractProjectsFromCSV(futureProjectsRaw);
+
+const noYearLength = (arr: Array<SimpleProject | Project>) => {
+  return arr.filter((elem) => isNaN(elem.time));
+};
+
+console.log("noYearFuture", noYearLength(futureProjects));
+console.log("noYearHistory", noYearLength(projects));
+console.log("noYearSimple", noYearLength(simpleProjects));
 
 export const shuffledFutureProjects = shuffleArray(futureProjects);
 
