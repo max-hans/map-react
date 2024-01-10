@@ -64,14 +64,6 @@ export const simpleProjects: SimpleProject[] = extractProjectsFromCSV(
 export const futureProjects: Project[] =
   extractProjectsFromCSV(futureProjectsRaw);
 
-const noYearLength = (arr: Array<SimpleProject | Project>) => {
-  return arr.filter((elem) => isNaN(elem.time));
-};
-
-console.log("Future", futureProjects.length);
-console.log("History", projects.length);
-console.log("HistorySimple", simpleProjects.length);
-
 export const shuffledFutureProjects = shuffleArray(futureProjects);
 
 export const scenarios: Scenario[] = (() => {

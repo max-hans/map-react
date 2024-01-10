@@ -177,7 +177,6 @@ const Scene = () => {
     if (mode === "FUTURE") {
       const count =
         scenarioInfo[scenarioIndex].projects * shuffledFutureProjects.length;
-      console.log(count);
       const part = shuffledFutureProjects.slice(0, count);
 
       return [...projects, ...part];
@@ -236,8 +235,6 @@ const Scene = () => {
   useEffect(() => {
     setSelectedProject(focussedProject ?? null);
   }, [focussedProject]);
-
-  console.log(filteredProjects.length);
 
   return (
     <>
