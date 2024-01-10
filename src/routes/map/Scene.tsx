@@ -237,6 +237,8 @@ const Scene = () => {
     setSelectedProject(focussedProject ?? null);
   }, [focussedProject]);
 
+  console.log(filteredProjects.length);
+
   return (
     <>
       <CameraControls
